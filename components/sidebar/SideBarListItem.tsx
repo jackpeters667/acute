@@ -6,8 +6,8 @@ type Entry = {
 };
 export default function SideBarListItem(props: Entry) {
   return (
-    <li className="text-gray-800">
-      <props.icon />
+    <li className="text-gray-800 cursor-pointer p-1 flex items-center rounded-xl hover:bg-gray-100">
+      <props.icon className="mr-1 text-xl" />
       {props.name}
     </li>
   );

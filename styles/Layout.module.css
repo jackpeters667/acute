@@ -1,8 +1,11 @@
 .sidebar {
   flex: 1;
+  height: calc(100vh - 48px);
+  top: 48px;
+  background-color: rgb(251, 251, 255);
 }
 
 .others {
   flex: 4;
-  background-color: darkblue;
+  background-color: darkcyan;
 }

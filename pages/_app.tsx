@@ -13,7 +13,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         <TopBar />
         <div className="flex">
           <SideBar />
-          <div className={styles.others + " "}>hello</div>
+          <div className={styles.others + " "}>
+            <Component {...pageProps} />
+          </div>
         </div>
       </PageLayout>
     );

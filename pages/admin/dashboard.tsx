@@ -1,12 +1,8 @@
-import {
-  MonetizationOn,
-  MonetizationOnTwoTone,
-  WatchLater,
-  Work,
-} from "@material-ui/icons";
+import { MonetizationOn, WatchLater, Work } from "@material-ui/icons";
 import React from "react";
 import FeaturedInfo from "../../components/cards/FeaturedInfo";
-
+import Chart from "../../components/Chart";
+import { userData } from "../../data/chartData";
 function dashboard() {
   return (
     <section className="text-gray-400 bg-gray-900 body-font">
@@ -29,6 +25,7 @@ function dashboard() {
           <FeaturedInfo icon={WatchLater} title="Hours" number="41" />
         </div>
       </div>
+      <Chart title="Active Users" data={userData} datakey={"Active Users"} />
     </section>
   );
 }

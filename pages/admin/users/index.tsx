@@ -1,7 +1,7 @@
-import styles from "../../styles/Users.module.css";
+import styles from "../../../styles/Users.module.css";
 import { DataGrid, GridRowsProp, GridColDef } from "@mui/x-data-grid";
 import { DeleteOutline, ModeEdit } from "@mui/icons-material";
-
+import Link from "next/link";
 const rows: GridRowsProp = [
   { id: 1, firstName: "Hello", lastName: "World" },
   { id: 2, firstName: "DataGridPro", lastName: "is Awesome" },
@@ -18,7 +18,18 @@ const columns: GridColDef[] = [
     renderCell: (params) => {
       return (
         <div className="cursor-pointer p-2">
-          <ModeEdit />
+          {/* change id number to be from array */}
+          {/*Or below works */}
+          {/* <Link href={`/admin/users/${encodeURIComponent("id")}`}> </Link> */}
+          <Link
+            href={{
+              pathname: "users/[id]",
+              query: { id: "random", comment: "content" },
+            }}
+          >
+            <ModeEdit />
+          </Link>
+
           <DeleteOutline />
         </div>
       );

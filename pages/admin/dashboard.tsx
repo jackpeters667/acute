@@ -1,4 +1,4 @@
-import { MonetizationOn, WatchLater, Work } from "@material-ui/icons";
+import { MonetizationOn, WatchLater, Work } from "@mui/icons-material";
 import React from "react";
 import FeaturedInfo from "../../components/cards/FeaturedInfo";
 import Chart from "../../components/Chart";

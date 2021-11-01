@@ -4,7 +4,7 @@ import {
   HomeTwoTone,
   MonetizationOnTwoTone,
   SettingsTwoTone,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
 import React from "react";
 import styles from "../styles/Layout.module.css";
 import SideBarListItem from "./sidebar/SideBarListItem";
@@ -18,7 +18,11 @@ export default function SideBar() {
             Dashboard
           </h3>
           <ul className="sidebarList p-1">
-            <SideBarListItem icon={HomeTwoTone} name="Analytics" />
+            <SideBarListItem
+              icon={HomeTwoTone}
+              name="Analytics"
+              path="/admin/dashboard"
+            />
           </ul>
         </div>
         <div className="sidebarMenu mb-3">
@@ -26,9 +30,21 @@ export default function SideBar() {
             Management
           </h3>
           <ul className="sidebarList p-1">
-            <SideBarListItem icon={AccountCircleTwoTone} name="Users" />
-            <SideBarListItem icon={AccessTimeTwoTone} name="Timesheet" />
-            <SideBarListItem icon={SettingsTwoTone} name="Project Management" />
+            <SideBarListItem
+              icon={AccountCircleTwoTone}
+              name="Users"
+              path="/admin/users"
+            />
+            <SideBarListItem
+              icon={AccessTimeTwoTone}
+              name="Timesheet"
+              path="/dashboard"
+            />
+            <SideBarListItem
+              icon={SettingsTwoTone}
+              name="Project Management"
+              path="/dashboard"
+            />
           </ul>
         </div>
         <div className="sidebarMenu mb-3">
@@ -36,7 +52,11 @@ export default function SideBar() {
             Records
           </h3>
           <ul className="sidebarList p-1">
-            <SideBarListItem icon={MonetizationOnTwoTone} name="Expenses" />
+            <SideBarListItem
+              icon={MonetizationOnTwoTone}
+              name="Expenses"
+              path="/dashboard"
+            />
           </ul>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { NotificationsNone, Settings } from "@material-ui/icons";
+import { NotificationsNone, Settings } from "@mui/icons-material";
 export default function TopBar() {
   return (
     <div className="topbar w-full bg-white h-12 sticky top-0 z-50">

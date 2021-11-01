@@ -2,7 +2,8 @@ import { HourglassBottom, PermIdentity } from "@mui/icons-material";
 import { useRouter } from "next/router";
 import styles from "../../../styles/Users.module.css";
 import Link from "next/link";
-const Details = () => {
+import { NextPage } from "next";
+const Details: NextPage = () => {
   const router = useRouter();
   const { id, comment } = router.query;
 

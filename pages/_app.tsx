@@ -4,10 +4,10 @@ import PageLayout from "../components/layout/PageLayout";
 import TopBar from "../components/TopBar";
 import SideBar from "../components/SideBar";
 import styles from "../styles/Layout.module.css";
+import { auth } from "../config/firebase";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const isLoggedIn = true;
-  if (isLoggedIn) {
+  if (auth.currentUser != null) {
     return (
       <PageLayout>
         <TopBar />

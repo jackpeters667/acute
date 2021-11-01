@@ -11,19 +11,6 @@ const firebaseConfig = {
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
-  //   apiKey: "AIzaSyDb4cGCJQTkRuZruOgf-KjsEmA0KCIVB1Y",
-
-  //   authDomain: "acutedash-c1e65.firebaseapp.com",
-
-  //   projectId: "acutedash-c1e65",
-
-  //   storageBucket: "acutedash-c1e65.appspot.com",
-
-  //   messagingSenderId: "248482893000",
-
-  //   appId: "1:248482893000:web:5b86e95fdfde2c362f29fd",
-
-  //   measurementId: "G-7GQEK6S1T3",
 };
 
 let firebaseApp;
@@ -32,6 +19,6 @@ if (!firebase.getApps().length) {
 } else {
   firebaseApp = firebase.getApp();
 }
-export const db = getFirestore();
+export const db = getFirestore(firebaseApp);
 export const auth = getAuth();
 export default firebase;

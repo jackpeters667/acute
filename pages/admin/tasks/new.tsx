@@ -26,7 +26,7 @@ export default function New() {
         console.log("Document written with ID: ", docRef.id);
         setTask("");
         setDepartment("");
-        alert("User created");
+        alert("Task created");
       } catch (e) {
         console.error("Error adding document: ", e);
       }

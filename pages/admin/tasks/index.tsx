@@ -3,38 +3,14 @@ import Link from "next/link";
 import { DataGrid, GridColDef, GridRowsProp } from "@mui/x-data-grid";
 import { NextPage } from "next";
 import React, { useState } from "react";
+import { useCollection } from "react-firebase-hooks/firestore";
+import { deleteDoc, collection, doc } from "firebase/firestore";
+import { db } from "../../../config/firebase";
 
 const Tasks: NextPage = () => {
-  const rows: GridRowsProp = [
-    {
-      id: 1,
-      task: "Chore 1",
-      department: "Hello",
-      startDate: "World",
-      endDate: "Hello",
-      owner: "Me",
-      status: "active",
-    },
-    {
-      id: 2,
-      task: "Chore 1",
-
-      department: "DataGridPro",
-      startDate: "is Awesome",
-      endDate: "Hello",
-      owner: "Me",
-      status: "active",
-    },
-    {
-      id: 3,
-      task: "Chore 1",
-      department: "MUI",
-      startDate: "is Amazing",
-      endDate: "Hello",
-      owner: "Me",
-      status: "active",
-    },
-  ];
+  const [value, loading, error] = useCollection(collection(db, "tasks"), {
+    snapshotListenOptions: { includeMetadataChanges: true },
+  });
 
   const columns: GridColDef[] = [
     {
@@ -46,7 +22,7 @@ const Tasks: NextPage = () => {
     { field: "startDate", headerName: "End Date", width: 200 },
     { field: "endDate", headerName: "Start Date", width: 200 },
     { field: "owner", headerName: "Project Owner", width: 200 },
-    { field: "status", headerName: "Status", width: 200 },
+    { field: "isActive", headerName: "Is Active", width: 200 },
     {
       field: "action",
       headerName: "Action",
@@ -90,16 +66,28 @@ const Tasks: NextPage = () => {
       },
     },
   ];
-  const [data, setData] = useState(rows);
+
   return (
     <div style={{ height: 300, width: "100%" }}>
-      <DataGrid
-        rows={data}
-        columns={columns}
-        checkboxSelection
-        disableSelectionOnClick
-        pageSize={8}
-      />
+      {value && (
+        <DataGrid
+          rows={value.docs.map((row) => {
+            return {
+              id: row.id,
+              task: row.get("task"),
+              owner: row.get("owner"),
+              department: row.get("department"),
+              startDate: row.get("startDate"),
+              endDate: row.get("endDate"),
+              isActive: row.get("isActive"),
+            };
+          })}
+          columns={columns}
+          checkboxSelection
+          disableSelectionOnClick
+          pageSize={8}
+        />
+      )}
     </div>
   );
 };

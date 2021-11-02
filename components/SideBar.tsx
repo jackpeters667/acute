@@ -4,6 +4,8 @@ import {
   HomeTwoTone,
   MonetizationOnTwoTone,
   SettingsTwoTone,
+  Work,
+  WorkOutline,
 } from "@mui/icons-material";
 import React from "react";
 import styles from "../styles/Layout.module.css";
@@ -36,9 +38,14 @@ export default function SideBar() {
               path="/admin/users"
             />
             <SideBarListItem
+              icon={WorkOutline}
+              name="Tasks"
+              path="/admin/users"
+            />
+            <SideBarListItem
               icon={AccessTimeTwoTone}
               name="Timesheet"
-              path="/dashboard"
+              path="/admin/timesheet"
             />
             <SideBarListItem
               icon={SettingsTwoTone}

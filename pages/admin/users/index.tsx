@@ -2,8 +2,7 @@ import styles from "../../../styles/Users.module.css";
 import { DataGrid, GridRowsProp, GridColDef } from "@mui/x-data-grid";
 import { DeleteOutline, ModeEdit } from "@mui/icons-material";
 import Link from "next/link";
-import { useState } from "react";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { deleteDoc, collection, doc } from "firebase/firestore";
 import { db } from "../../../config/firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
 
@@ -51,12 +50,13 @@ export default function users() {
     },
   ];
 
-  const handleDelete = (id: any) => {
-    // try {
-    //   setData(data.filter((item: { id: any; }) => item.id !== id));
-    // } catch (error) {
-    //   console.log(error);
-    // }
+  const handleDelete = async (id: any) => {
+    var r = confirm("Delete this user?");
+    if (r) {
+      const documentRef = doc(db, "users", id.toString());
+      await deleteDoc(documentRef);
+      console.log("Document written with ID: ", documentRef.id);
+    }
   };
 
   return (

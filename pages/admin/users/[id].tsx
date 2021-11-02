@@ -4,7 +4,7 @@ import styles from "../../../styles/Users.module.css";
 import Link from "next/link";
 import { NextPage } from "next";
 import { useState } from "react";
-import { doc, updateDoc, collection } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../config/firebase";
 
 const Details: NextPage = () => {

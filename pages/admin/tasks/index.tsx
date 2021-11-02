@@ -67,6 +67,15 @@ const Tasks: NextPage = () => {
     },
   ];
 
+  const handleDelete = async (id: any) => {
+    var r = confirm("Delete this task?");
+    if (r) {
+      const documentRef = doc(db, "tasks", id.toString());
+      await deleteDoc(documentRef);
+      console.log("Document written with ID: ", documentRef.id);
+    }
+  };
+
   return (
     <div style={{ height: 300, width: "100%" }}>
       {value && (
@@ -92,6 +101,3 @@ const Tasks: NextPage = () => {
   );
 };
 export default Tasks;
-function handleDelete(id: any): void {
-  throw new Error("Function not implemented.");
-}

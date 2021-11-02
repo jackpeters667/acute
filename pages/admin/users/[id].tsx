@@ -3,10 +3,35 @@ import { useRouter } from "next/router";
 import styles from "../../../styles/Users.module.css";
 import Link from "next/link";
 import { NextPage } from "next";
+import { useState } from "react";
+import { doc, updateDoc, collection } from "firebase/firestore";
+import { db } from "../../../config/firebase";
+
 const Details: NextPage = () => {
   const router = useRouter();
-  const { id, comment } = router.query;
+  const { id, firstName, lastName } = router.query;
+  const [fName, setFirstName] = useState(firstName);
+  const [lName, setLastName] = useState(lastName);
+  const updateUser = async (evt: { preventDefault: () => void }) => {
+    evt.preventDefault();
 
+    if (fName && lName && id) {
+      try {
+        const documentRef = doc(db, "users", id.toString());
+        // Set the "capital" field of the city 'DC'
+        await updateDoc(documentRef, {
+          firstName: fName,
+          lastName: lName,
+        });
+        console.log("Document written with ID: ", documentRef.id);
+        alert("User updated");
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+    } else {
+      alert("Please check your entries");
+    }
+  };
   return (
     <>
       <div className="user">
@@ -23,9 +48,11 @@ const Details: NextPage = () => {
             <div className="userShowTop flex items-center">
               <div className="userShowTopTitle flex flex-col ml-5">
                 <span className="userShowSurname font-semibold text-xl">
-                  {id}
+                  {lastName}
                 </span>
-                <span className="userShowFirstName font-light">{comment}</span>
+                <span className="userShowFirstName font-light">
+                  {firstName}
+                </span>
               </div>
             </div>
             <div className="userShowBottom mt-5">
@@ -40,25 +67,33 @@ const Details: NextPage = () => {
           </div>
           <div className={styles.userUpdate + " shadow-2xl p-5 ml-5"}>
             <span className="userUpdateTitle text-2xl font-semibold">Edit</span>
-            <form className="userUpdateForm flex justify-between mt-5">
+            <form
+              className="userUpdateForm flex justify-between mt-5"
+              onSubmit={updateUser}
+            >
               <div className="userUpdateLeft">
                 <div className="userUpdateItem flex flex-col mt-2">
                   <label className="mb-1 text-sm">First Name</label>
                   <input
                     type="text"
                     className="userUpdateInput text-base shadow-sm w-60 border-none border-b-2 border-gray-600 h-7"
-                    placeholder="first name"
+                    placeholder={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
                   />
                 </div>
                 <div className="userUpdateItem flex flex-col mt-2">
                   <label className="mb-1 text-sm">Last Name</label>
                   <input
                     type="text"
+                    onChange={(e) => setLastName(e.target.value)}
                     className="userUpdateInput shadow-sm w-60 text-base"
-                    placeholder="last name"
+                    placeholder={lastName}
                   />
                 </div>
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">
+                <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+                  type="submit"
+                >
                   Update
                 </button>
               </div>

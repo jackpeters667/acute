@@ -11,11 +11,6 @@ export default function users() {
   const [value, loading, error] = useCollection(collection(db, "users"), {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
-  const rows: GridRowsProp = [
-    { id: 1, firstName: "Hello", lastName: "World" },
-    { id: 2, firstName: "DataGridPro", lastName: "is Awesome" },
-    { id: 3, firstName: "MUI", lastName: "is Amazing" },
-  ];
 
   const columns: GridColDef[] = [
     {
@@ -28,7 +23,9 @@ export default function users() {
       field: "action",
       headerName: "Action",
       width: 150,
-      renderCell: (params: { row: { id: any } }) => {
+      renderCell: (params: {
+        row: { id: any; firstName: string; lastName: string };
+      }) => {
         return (
           <div className="cursor-pointer p-2">
             {/* change id number to be from array */}
@@ -37,7 +34,11 @@ export default function users() {
             <Link
               href={{
                 pathname: "users/[id]",
-                query: { id: "random", comment: "content" },
+                query: {
+                  id: params.row.id,
+                  firstName: params.row.firstName,
+                  lastName: params.row.lastName,
+                },
               }}
             >
               <ModeEdit />
@@ -66,7 +67,7 @@ export default function users() {
             return {
               id: row.id,
               firstName: row.get("firstName"),
-              lastName: row.get("lastLastName"),
+              lastName: row.get("lastName"),
             };
           })}
           columns={columns}

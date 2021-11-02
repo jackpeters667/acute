@@ -3,7 +3,12 @@ import React from "react";
 import FeaturedInfo from "../../components/cards/FeaturedInfo";
 import Chart from "../../components/Chart";
 import { userData } from "../../data/chartData";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../config/firebase";
+
 function dashboard() {
+  const [user, loading, error] = useAuthState(auth);
+  console.log("logged in", user);
   return (
     <section className="text-gray-400 bg-gray-900 body-font">
       <div className="container px-5 py-24 mx-auto flex flex-wrap">

@@ -1,29 +1,32 @@
 import type { NextPage } from "next";
-import Link from "next/link";
-import router from "next/router";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { useState } from "react";
 import { auth } from "../config/firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useRouter } from "next/router";
 
 const Home: NextPage = () => {
-  const [user, loading, error] = useAuthState(auth);
-  console.log(user);
-  if (loading) {
-    return (
-      <div>
-        <p>Initialising User...</p>
-      </div>
-    );
-  }
-  if (error) {
-    return (
-      <div>
-        <p>Error: {error}</p>
-      </div>
-    );
-  }
-  if (user) {
-    router.push("/admin/dashboard");
-  }
+  const [email, setEmailAddress] = useState("");
+  const [pass1, setPassword] = useState("");
+  const [pass2, setPassword2] = useState("");
+  const router = useRouter();
+
+  const createUser = (evt: { preventDefault: () => void }) => {
+    evt.preventDefault();
+    if (pass1 === pass2) {
+      createUserWithEmailAndPassword(auth, email, pass1)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          router.push("/admin/dashboard");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          alert(errorMessage);
+        });
+    } else {
+      alert("Passwords are not the same");
+    }
+  };
   return (
     <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -34,18 +37,24 @@ const Home: NextPage = () => {
             alt="Workflow"
           />
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
+            Create an account
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Or{" "}
-            <Link href="/register">
-              <a className="font-medium text-blue-600 hover:text-blue-500">
-                create a new account
-              </a>
-            </Link>
+            <a
+              href="#"
+              className="font-medium text-blue-600 hover:text-blue-500"
+            >
+              sign in
+            </a>
           </p>
         </div>
-        <form className="mt-8 space-y-6" action="#" method="POST">
+        <form
+          className="mt-8 space-y-6"
+          action="#"
+          method="POST"
+          onSubmit={createUser}
+        >
           <input type="hidden" name="remember" value="true" />
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
@@ -56,6 +65,7 @@ const Home: NextPage = () => {
                 id="email-address"
                 name="email"
                 type="email"
+                onChange={(e) => setEmailAddress(e.target.value)}
                 autoComplete="email"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
@@ -71,39 +81,28 @@ const Home: NextPage = () => {
                 name="password"
                 type="password"
                 autoComplete="current-password"
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                placeholder="Password"
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="sr-only">
+                Re-enter
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                onChange={(e) => setPassword2(e.target.value)}
+                autoComplete="current-password"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
               />
             </div>
           </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label
-                htmlFor="remember-me"
-                className="ml-2 block text-sm text-gray-900"
-              >
-                Remember me
-              </label>
-            </div>
-
-            <div className="text-sm">
-              <a
-                href="#"
-                className="font-medium text-blue-600 hover:text-blue-500"
-              >
-                Forgot your password?
-              </a>
-            </div>
-          </div>
-
           <div>
             <button
               type="submit"
@@ -124,7 +123,7 @@ const Home: NextPage = () => {
                   />
                 </svg>
               </span>
-              Sign in
+              Register
             </button>
           </div>
         </form>

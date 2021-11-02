@@ -5,24 +5,31 @@ import TopBar from "../components/TopBar";
 import SideBar from "../components/SideBar";
 import styles from "../styles/Layout.module.css";
 import { auth } from "../config/firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useEffect } from "react";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  if (auth.currentUser != null) {
-    return (
-      <PageLayout>
-        <TopBar />
-        <div className="flex">
-          <SideBar />
-          <div className={styles.others + " "}>
-            <Component {...pageProps} />
-          </div>
-        </div>
-      </PageLayout>
-    );
-  }
+  const [user, loading, error] = useAuthState(auth);
+  console.log(user);
+  useEffect(() => {
+    if (!user) {
+      return () => {
+        <PageLayout>
+          <Component {...pageProps} />
+        </PageLayout>;
+      };
+    }
+  }, [user, loading]);
+
   return (
     <PageLayout>
-      <Component {...pageProps} />
+      <TopBar />
+      <div className="flex">
+        <SideBar />
+        <div className={styles.others + " "}>
+          <Component {...pageProps} />
+        </div>
+      </div>
     </PageLayout>
   );
 }

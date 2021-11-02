@@ -35,6 +35,7 @@ const Tasks: NextPage = () => {
       status: "active",
     },
   ];
+
   const columns: GridColDef[] = [
     {
       field: "task",
@@ -51,7 +52,15 @@ const Tasks: NextPage = () => {
       headerName: "Action",
       width: 150,
       renderCell: (params: {
-        row: { id: any; firstName: string; lastName: string };
+        row: {
+          id: any;
+          task: string;
+          department: string;
+          startDate: any;
+          endDate: any;
+          owner: string;
+          isActive: boolean;
+        };
       }) => {
         return (
           <div className="cursor-pointer p-2">
@@ -60,11 +69,15 @@ const Tasks: NextPage = () => {
             {/* <Link href={`/admin/users/${encodeURIComponent("id")}`}> </Link> */}
             <Link
               href={{
-                pathname: "users/[id]",
+                pathname: "tasks/[id]",
                 query: {
                   id: params.row.id,
-                  firstName: params.row.firstName,
-                  lastName: params.row.lastName,
+                  task: params.row.task,
+                  department: params.row.department,
+                  startDate: params.row.startDate,
+                  endDate: params.row.endDate,
+                  owner: params.row.owner,
+                  isActive: params.row.isActive,
                 },
               }}
             >

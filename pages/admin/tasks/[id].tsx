@@ -22,25 +22,29 @@ const Details: NextPage = () => {
   const [myStartDate, setStartDate] = useState(startDate);
   const [myEndDate, setEndDate] = useState(endDate);
   const [myOwner, setOwner] = useState(owner);
-  const [myIsActive, setIsActive] = useState(isActive);
+  const [myIsActive, setIsActive] = useState(false);
 
   const updateTask = async (evt: { preventDefault: () => void }) => {
     evt.preventDefault();
-    // if (fName && lName && id) {
-    //   try {
-    //     const documentRef = doc(db, "users", id.toString());
-    //     await updateDoc(documentRef, {
-    //       firstName: fName,
-    //       lastName: lName,
-    //     });
-    //     console.log("Document written with ID: ", documentRef.id);
-    //     alert("User updated");
-    //   } catch (e) {
-    //     console.error("Error adding document: ", e);
-    //   }
-    // } else {
-    //   alert("Please check your entries");
-    // }
+    if (myTask && myDepartment && id && myStartDate && myEndDate && myOwner) {
+      try {
+        const documentRef = doc(db, "tasks", id.toString());
+        await updateDoc(documentRef, {
+          task: myTask,
+          department: myDepartment,
+          startDate: myStartDate,
+          endDate: myEndDate,
+          owner: myOwner,
+          isActive: myIsActive,
+        });
+        console.log("Document written with ID: ", documentRef.id);
+        alert("Task updated");
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+    } else {
+      alert("Please check your entries");
+    }
   };
   return (
     <>
@@ -67,11 +71,20 @@ const Details: NextPage = () => {
             </div>
             <div className="userShowBottom mt-5">
               <span className="userShowTitle text-base font-semibold text-gray-400">
-                Statistics
+                Details
               </span>
               <div className="userShowInfo flex items-center mt-5 mb-0 text-gray-600">
                 <HourglassBottom className=" text-base" />
                 <span className="userShowInfoTitle ml-3">56345</span>
+              </div>
+              <hr />
+              <div className="stats mt-2 flex flex-col">
+                <span className="taskName">Task Name: {task}</span>
+                <span className="taskName">Task Department: {department}</span>
+                <span className="taskName">Start Date: {startDate}</span>
+                <span className="taskName">End Date: {endDate}</span>
+                <span className="taskName">Owner: {owner}</span>
+                <span className="taskName">Is Active: {isActive}</span>
               </div>
             </div>
           </div>
@@ -121,7 +134,7 @@ const Details: NextPage = () => {
                 <div className="userUpdateItem flex flex-col mt-2">
                   <label className="mb-1 text-sm">Owner</label>
                   <input
-                    type="date"
+                    type="text"
                     onChange={(e) => setOwner(e.target.value)}
                     className="userUpdateInput shadow-sm w-60 text-base"
                     placeholder={owner1}
@@ -129,22 +142,26 @@ const Details: NextPage = () => {
                 </div>
                 <div className="userUpdateItem flex flex-col mt-2">
                   <label className="mb-1 text-sm">Is Active</label>
-                  <input
-                    type="radio"
-                    id="yes"
-                    name="Yes"
-                    value="Yes"
-                    onChange={(e) => setIsActive(e.target.value)}
-                  />
-                  <label htmlFor="yes">Yes</label>
-                  <input
-                    type="radio"
-                    id="no"
-                    name="No"
-                    value="Yes"
-                    onChange={(e) => setIsActive(e.target.value)}
-                  />
-                  <label htmlFor="no">No</label>
+                  <div className="flex flex-row items-center">
+                    <input
+                      type="radio"
+                      id="yes"
+                      name="active"
+                      value="Yes"
+                      onClick={(e) => setIsActive(true)}
+                    />
+                    <label htmlFor="yes">Yes</label>
+                  </div>
+                  <div className="flex flex-row items-center">
+                    <input
+                      type="radio"
+                      id="no"
+                      name="active"
+                      value="No"
+                      onClick={(e) => setIsActive(false)}
+                    />
+                    <label htmlFor="no">No</label>
+                  </div>
                 </div>
                 <button
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"

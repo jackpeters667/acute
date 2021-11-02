@@ -15,14 +15,15 @@ export default function New() {
   const [started, setEndDate] = useState("");
   const [ended, setEnded] = useState("");
   const [time, setTime] = useState("");
-  const [age, setAge] = React.useState("");
+  const [selectedUID, setSelectedUserID] = React.useState("");
 
   const [usersCol, loading, error] = useCollection(collection(db, "users"), {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
 
   const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value as string);
+    setSelectedUserID(event.target.value as string);
+    console.log(event.target.value);
   };
 
   const createTask = async (evt: { preventDefault: () => void }) => {
@@ -63,12 +64,12 @@ export default function New() {
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={age}
+                value={selectedUID}
                 label="Worker"
                 onChange={handleChange}
               >
                 {usersCol?.docs.map((user) => (
-                  <MenuItem value={user.id}>
+                  <MenuItem key={user.id} value={user.id}>
                     {user.get("firstName") + " " + user.get("lastName")}
                   </MenuItem>
                 ))}

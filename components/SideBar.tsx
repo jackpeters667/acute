@@ -38,11 +38,6 @@ export default function SideBar() {
               path="/admin/users"
             />
             <SideBarListItem
-              icon={WorkOutline}
-              name="Tasks"
-              path="/admin/users"
-            />
-            <SideBarListItem
               icon={AccessTimeTwoTone}
               name="Timesheet"
               path="/admin/timesheet"
@@ -50,7 +45,7 @@ export default function SideBar() {
             <SideBarListItem
               icon={SettingsTwoTone}
               name="Project Management"
-              path="/dashboard"
+              path="/admin/tasks"
             />
           </ul>
         </div>

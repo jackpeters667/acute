@@ -46,7 +46,7 @@ const Details: NextPage = () => {
     <>
       <div className="user">
         <div className="userTitleContainer flex items-center justify-between">
-          <h1 className="userTitle text-2xl font-bold">Edit User</h1>
+          <h1 className="userTitle text-2xl font-bold">Edit Task</h1>
           <Link href="/admin/tasks/new">
             <button className="userAddButton bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               Create

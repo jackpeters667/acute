@@ -48,7 +48,17 @@ const Timesheet: NextPage = () => {
       field: "action",
       headerName: "Action",
       width: 150,
-      renderCell: (params) => {
+      renderCell: (params: {
+        row: {
+          id: any;
+          firstName: string;
+          lastName: string;
+          date: any;
+          started: any;
+          ended: any;
+          time: any;
+        };
+      }) => {
         return (
           <div className="cursor-pointer p-2">
             {/* change id number to be from array */}
@@ -57,7 +67,15 @@ const Timesheet: NextPage = () => {
             <Link
               href={{
                 pathname: "timesheet/[id]",
-                query: { id: "random", comment: "content" },
+                query: {
+                  id: params.row.id,
+                  firstName: params.row.firstName,
+                  lastName: params.row.lastName,
+                  date: params.row.date,
+                  started: params.row.started,
+                  ended: params.row.ended,
+                  time: params.row.time,
+                },
               }}
             >
               <ModeEdit />

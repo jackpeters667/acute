@@ -12,13 +12,14 @@ const Details: NextPage = () => {
   const { id, firstName, lastName } = router.query;
   const [fName, setFirstName] = useState(firstName);
   const [lName, setLastName] = useState(lastName);
+  let name1: string = firstName as string;
+  let name2: string = lastName as string;
   const updateUser = async (evt: { preventDefault: () => void }) => {
     evt.preventDefault();
 
     if (fName && lName && id) {
       try {
         const documentRef = doc(db, "users", id.toString());
-        // Set the "capital" field of the city 'DC'
         await updateDoc(documentRef, {
           firstName: fName,
           lastName: lName,
@@ -77,7 +78,7 @@ const Details: NextPage = () => {
                   <input
                     type="text"
                     className="userUpdateInput text-base shadow-sm w-60 border-none border-b-2 border-gray-600 h-7"
-                    placeholder={firstName}
+                    placeholder={name1}
                     onChange={(e) => setFirstName(e.target.value)}
                   />
                 </div>
@@ -87,7 +88,7 @@ const Details: NextPage = () => {
                     type="text"
                     onChange={(e) => setLastName(e.target.value)}
                     className="userUpdateInput shadow-sm w-60 text-base"
-                    placeholder={lastName}
+                    placeholder={name2}
                   />
                 </div>
                 <button

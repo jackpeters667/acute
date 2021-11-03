@@ -10,19 +10,74 @@ import { useCollection } from "react-firebase-hooks/firestore";
 import { collection } from "firebase/firestore";
 
 function dashboard() {
+  const isToday = (someDate: {
+    getDate: () => number;
+    getMonth: () => number;
+    getFullYear: () => number;
+  }) => {
+    const today = new Date();
+    return (
+      someDate.getDate() == today.getDate() &&
+      someDate.getMonth() == today.getMonth() &&
+      someDate.getFullYear() == today.getFullYear()
+    );
+  };
   const [user, loading, error] = useAuthState(auth);
-  const [value, loadings, errors] = useCollection(collection(db, "expenses"), {
-    snapshotListenOptions: { includeMetadataChanges: true },
-  });
+  const [expenses, loadings, errors] = useCollection(
+    collection(db, "expenses"),
+    {
+      snapshotListenOptions: { includeMetadataChanges: true },
+    }
+  );
   var totalExpenses: number = 0;
-  if (value) {
-    for (let index = 0; index < value?.docs.length; index++) {
-      if (value.docs[index].get("approved")) {
+  if (expenses) {
+    for (let index = 0; index < expenses?.docs.length; index++) {
+      if (expenses.docs[index].get("approved")) {
         totalExpenses = (+totalExpenses +
-          +value.docs[index].get("amount")) as number;
+          +expenses.docs[index].get("amount")) as number;
       }
     }
   }
+  const [tasks, loadingst, errorst] = useCollection(collection(db, "tasks"), {
+    snapshotListenOptions: { includeMetadataChanges: true },
+  });
+  var totalTasks: number = 0;
+  if (tasks) {
+    for (let index = 0; index < tasks?.docs.length; index++) {
+      if (tasks.docs[index].get("isActive")) {
+        totalTasks++;
+      }
+    }
+  }
+
+  const [timesheet, loadingsh, errorsh] = useCollection(
+    collection(db, "timesheet"),
+    {
+      snapshotListenOptions: { includeMetadataChanges: true },
+    }
+  );
+  var totalHours: number = 0;
+  if (timesheet) {
+    for (let index = 0; index < timesheet.docs.length; index++) {
+      const element = timesheet.docs[index];
+      const time: string = element.get("time");
+      console.log("full:", time);
+      var numHours = 0;
+      if (time) {
+        var hours = time.toString().substr(0, time.toString().indexOf(";"));
+        var minutes = time.toString().substr(1, time.toString().indexOf(";"));
+        const numMinutes = +minutes;
+        if (numMinutes >= 30) {
+          numHours++;
+        }
+        console.log("hours", hours);
+        numHours = numHours + +hours;
+        totalHours = totalHours + numHours;
+        console.log(totalHours);
+      }
+    }
+  }
+
   if (loading) {
     return (
       <div>
@@ -53,14 +108,19 @@ function dashboard() {
             <FeaturedInfo
               icon={MonetizationOn}
               title="Expenses"
-              number={totalExpenses as unknown as string}
+              number={("R" + totalExpenses) as unknown as string}
               path="expenses"
             />
-            <FeaturedInfo icon={Work} title="Tasks" number="5" path="tasks" />
+            <FeaturedInfo
+              icon={Work}
+              title="Tasks"
+              number={totalTasks as unknown as string}
+              path="tasks"
+            />
             <FeaturedInfo
               icon={WatchLater}
               title="Hours"
-              number="41"
+              number={totalHours as unknown as string}
               path="timesheet"
             />
           </div>

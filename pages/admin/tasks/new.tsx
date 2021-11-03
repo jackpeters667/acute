@@ -14,7 +14,7 @@ export default function New() {
 
   const createTask = async (evt: { preventDefault: () => void }) => {
     evt.preventDefault();
-    if (task.length > 0 && department.length > 0) {
+    if (task && department && startDate && endDate && owner) {
       try {
         const docRef = await addDoc(collection(db, "tasks"), {
           task: task,
@@ -65,7 +65,7 @@ export default function New() {
               <input
                 type="text"
                 className="userUpdateInput text-base shadow-sm w-60 border-none border-b-2 border-gray-600 h-7"
-                placeholder="first name"
+                placeholder="Task Name"
                 onChange={(e) => setTask(e.target.value)}
               />
             </div>
@@ -74,7 +74,7 @@ export default function New() {
               <input
                 type="text"
                 className="userUpdateInput shadow-sm w-60 text-base"
-                placeholder="last name"
+                placeholder="Department Name"
                 onChange={(e) => setDepartment(e.target.value)}
               />
             </div>

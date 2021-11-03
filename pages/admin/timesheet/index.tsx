@@ -124,6 +124,7 @@ const Timesheet: NextPage = () => {
 
     return (
       <div style={{ height: 300, width: "100%" }}>
+        <AddToTable path="timesheet/new" />
         {value && (
           <DataGrid
             rows={value.docs.map((row) => {
@@ -143,7 +144,6 @@ const Timesheet: NextPage = () => {
             pageSize={8}
           />
         )}
-        <AddToTable path="timesheet/new" />
       </div>
     );
   }

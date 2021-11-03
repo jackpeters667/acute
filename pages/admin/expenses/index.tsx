@@ -90,6 +90,7 @@ export default function users() {
 
     return (
       <div style={{ height: 800, width: "100%" }}>
+        <AddToTable path="expenses/new" />
         {value && (
           <DataGrid
             rows={value.docs.map((row) => {
@@ -107,7 +108,6 @@ export default function users() {
             pageSize={8}
           />
         )}
-        <AddToTable path="expenses/new" />
       </div>
     );
   }

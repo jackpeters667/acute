@@ -97,6 +97,7 @@ const Tasks: NextPage = () => {
 
     return (
       <div style={{ height: 300, width: "100%" }}>
+        <AddToTable path="tasks/new" />
         {value && (
           <DataGrid
             rows={value.docs.map((row) => {
@@ -116,7 +117,6 @@ const Tasks: NextPage = () => {
             pageSize={8}
           />
         )}
-        <AddToTable path="tasks/new" />
       </div>
     );
   }

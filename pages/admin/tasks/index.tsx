@@ -8,6 +8,7 @@ import { deleteDoc, collection, doc } from "firebase/firestore";
 import { auth, db } from "../../../config/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import router from "next/router";
+import AddToTable from "../../../components/AddToTable";
 
 const Tasks: NextPage = () => {
   const [user, loading, error] = useAuthState(auth);
@@ -115,6 +116,7 @@ const Tasks: NextPage = () => {
             pageSize={8}
           />
         )}
+        <AddToTable path="tasks/new" />
       </div>
     );
   }

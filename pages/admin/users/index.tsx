@@ -7,6 +7,7 @@ import { db, auth } from "../../../config/firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import router from "next/router";
+import AddToTable from "../../../components/AddToTable";
 
 export default function users() {
   const [user, loading, error] = useAuthState(auth);
@@ -94,6 +95,7 @@ export default function users() {
             pageSize={8}
           />
         )}
+        <AddToTable path="users/new" />
       </div>
     );
   }

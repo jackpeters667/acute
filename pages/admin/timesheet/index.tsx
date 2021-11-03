@@ -15,6 +15,7 @@ import { deleteDoc, collection, doc } from "firebase/firestore";
 import { db, auth } from "../../../config/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import router from "next/router";
+import AddToTable from "../../../components/AddToTable";
 
 const Timesheet: NextPage = () => {
   const [user, loading, error] = useAuthState(auth);
@@ -142,6 +143,7 @@ const Timesheet: NextPage = () => {
             pageSize={8}
           />
         )}
+        <AddToTable path="timesheet/new" />
       </div>
     );
   }

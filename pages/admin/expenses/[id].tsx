@@ -5,10 +5,30 @@ import Link from "next/link";
 import { NextPage } from "next";
 import { useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../../../config/firebase";
+import { auth, db } from "../../../config/firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const Details: NextPage = () => {
+  const [user, loading, error] = useAuthState(auth);
   const router = useRouter();
+
+  // if (loading) {
+  //   return (
+  //     <div>
+  //       <p>Initialising User...</p>
+  //     </div>
+  //   );
+  // }
+  // if (error) {
+  //   return (
+  //     <div>
+  //       <p>Error: {error}</p>
+  //     </div>
+  //   );
+  // }
+  // if (user) {
+  //   router.push("/admin/dashboard");
+  // }
   const { id, name, amount, date, approved } = router.query;
   const [fName, setFirstName] = useState(name);
   const [lName, setLastName] = useState(amount);

@@ -12,8 +12,8 @@ const Details: NextPage = () => {
   let fName: string = firstName as string;
   let lName: string = lastName as string;
   let startDate1: string = date as string;
-  let endDate1: string = started as string;
-  let owner1: string = ended as string;
+  let started1: string = started as string;
+  let ended1: string = ended as string;
   const [first, setFirstName] = useState(firstName);
   const [last, setDepartment] = useState(lastName);
   const [myDate, setStartDate] = useState(date);
@@ -74,12 +74,12 @@ const Details: NextPage = () => {
               </div>
               <hr />
               <div className="stats mt-2 flex flex-col">
-                <span className="taskName">Task Name: {firstName}</span>
-                <span className="taskName">Task Department: {lastName}</span>
-                <span className="taskName">Start Date: {date}</span>
-                <span className="taskName">End Date: {started}</span>
-                <span className="taskName">Owner: {ended}</span>
-                <span className="taskName">Is Active: {time}</span>
+                <span className="taskName">First Name: {firstName}</span>
+                <span className="taskName">Last Name: {lastName}</span>
+                <span className="taskName">Date: {date}</span>
+                <span className="taskName">Time Started: {started}</span>
+                <span className="taskName">Time Ended: {ended}</span>
+                <span className="taskName">Time Difference: {time}</span>
               </div>
             </div>
           </div>
@@ -123,7 +123,7 @@ const Details: NextPage = () => {
                     type="date"
                     onChange={(e) => setEndDate(e.target.value)}
                     className="userUpdateInput shadow-sm w-60 text-base"
-                    placeholder={endDate1}
+                    placeholder={started1}
                   />
                 </div>
                 <div className="userUpdateItem flex flex-col mt-2">
@@ -132,7 +132,7 @@ const Details: NextPage = () => {
                     type="text"
                     onChange={(e) => setOwner(e.target.value)}
                     className="userUpdateInput shadow-sm w-60 text-base"
-                    placeholder={owner1}
+                    placeholder={ended1}
                   />
                 </div>
                 <div className="userUpdateItem flex flex-col mt-2">

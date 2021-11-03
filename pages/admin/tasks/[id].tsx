@@ -6,7 +6,6 @@ import { NextPage } from "next";
 import { useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../config/firebase";
-import { StringLike } from "@firebase/util";
 
 const Details: NextPage = () => {
   const router = useRouter();

@@ -90,29 +90,35 @@ export default function New() {
       >
         <div className="userUpdateLeft">
           <div className="userUpdateItem flex flex-col mt-2">
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Workers</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={selectedUID}
-                label="Worker"
-                onChange={handleChange}
-              >
-                {usersCol?.docs.map((user) => (
-                  <MenuItem
-                    key={user.id}
-                    value={[
-                      user.id,
-                      user.get("firstName"),
-                      user.get("lastName"),
-                    ]}
-                  >
-                    {user.get("firstName") + " " + user.get("lastName")}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            {usersCol && (
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Workers</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={`${selectedUID as string},${firstName as string},${
+                    lastName as string
+                  }`}
+                  defaultValue=""
+                  label="Worker"
+                  onChange={handleChange}
+                >
+                  {usersCol?.docs.map((user) => (
+                    <MenuItem
+                      className="text-black"
+                      key={user.id}
+                      value={[
+                        user.id,
+                        user.get("firstName"),
+                        user.get("lastName"),
+                      ]}
+                    >
+                      {user.get("firstName") + " " + user.get("lastName")}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
             <label className="mb-1 text-sm">Date</label>
             <input
               type="date"

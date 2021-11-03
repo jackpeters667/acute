@@ -1,47 +1,49 @@
 import { NextPage } from "next";
 import React from "react";
 import styles from "../../../styles/Users.module.css";
-import { DataGrid, GridRowsProp, GridColDef } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridRowsProp,
+  GridColDef,
+  GridValueFormatterParams,
+} from "@mui/x-data-grid";
 import { DeleteOutline, ModeEdit } from "@mui/icons-material";
 import Link from "next/link";
 import { useState } from "react";
+import { useCollection } from "react-firebase-hooks/firestore";
+import { deleteDoc, collection, doc } from "firebase/firestore";
+import { db } from "../../../config/firebase";
 
 const Timesheet: NextPage = () => {
-  const rows: GridRowsProp = [
-    {
-      id: 1,
-      firstName: "Hello",
-      lastName: "World",
-      date: "12/12/2012",
-      started: "08:00",
-      ended: "17:00",
-      time: "9",
-    },
-    {
-      id: 2,
-      firstName: "DataGridPro",
-      lastName: "is Awesome",
-      date: "12/12/2012",
-      started: "08:00",
-      ended: "17:00",
-      time: "9",
-    },
-    {
-      id: 3,
-      firstName: "MUI",
-      lastName: "is Amazing",
-      date: "12/12/2012",
-      started: "08:00",
-      ended: "17:00",
-      time: "9",
-    },
-  ];
+  const [value, loading, error] = useCollection(collection(db, "timesheet"), {
+    snapshotListenOptions: { includeMetadataChanges: true },
+  });
 
   const columns: GridColDef[] = [
     { field: "firstName", headerName: "First Name", width: 200 },
     { field: "lastName", headerName: "Last Name", width: 200 },
     { field: "date", headerName: "Date", width: 200 },
-    { field: "started", headerName: "Started", width: 200 },
+    {
+      field: "started",
+      headerName: "Started",
+      width: 200,
+      valueFormatter: (params: GridValueFormatterParams) => {
+        var date = new Date((params.value as number) * 1000);
+        // Hours part from the timestamp
+        var hours = date.getHours();
+        // Minutes part from the timestamp
+        var minutes = "0" + date.getMinutes();
+        // Seconds part from the timestamp
+        var seconds = "0" + date.getSeconds();
+
+        // Will display time in 10:30:23 format
+        var formattedTime =
+          hours + ":" + minutes.substr(-2) + ":" + seconds.substr(-2);
+
+        console.log(formattedTime);
+        return `${formattedTime}`;
+      },
+    },
     { field: "ended", headerName: "Ended", width: 200 },
     { field: "time", headerName: "Difference", width: 200 },
     {
@@ -87,25 +89,37 @@ const Timesheet: NextPage = () => {
       },
     },
   ];
-  const [data, setData] = useState(rows);
 
-  const handleDelete = (id: any) => {
-    try {
-      setData(data.filter((item) => item.id !== id));
-    } catch (error) {
-      console.log(error);
+  const handleDelete = async (id: any) => {
+    var r = confirm("Delete this user?");
+    if (r) {
+      const documentRef = doc(db, "timesheet", id.toString());
+      await deleteDoc(documentRef);
+      console.log("Document written with ID: ", documentRef.id);
     }
   };
 
   return (
     <div style={{ height: 300, width: "100%" }}>
-      <DataGrid
-        rows={data}
-        columns={columns}
-        checkboxSelection
-        disableSelectionOnClick
-        pageSize={8}
-      />
+      {value && (
+        <DataGrid
+          rows={value.docs.map((row) => {
+            return {
+              id: row.id,
+              firstName: row.get("firstName"),
+              lastName: row.get("lastName"),
+              date: row.get("date"),
+              started: row.get("started"),
+              ended: row.get("ended"),
+              time: row.get("time"),
+            };
+          })}
+          columns={columns}
+          checkboxSelection
+          disableSelectionOnClick
+          pageSize={8}
+        />
+      )}
     </div>
   );
 };

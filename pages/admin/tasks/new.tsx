@@ -13,45 +13,45 @@ export default function New() {
   const [isActive, setIsActive] = useState(false);
 
   const createTask = async (evt: { preventDefault: () => void }) => {
-    const [user, loading, error] = useAuthState(auth);
-    if (loading) {
-      return (
-        <div>
-          <p>Initialising User...</p>
-        </div>
-      );
-    }
-    if (error) {
-      return (
-        <div>
-          <p>Error: {error}</p>
-        </div>
-      );
-    }
-    if (user) {
-      evt.preventDefault();
-      if (task.length > 0 && department.length > 0) {
-        try {
-          const docRef = await addDoc(collection(db, "tasks"), {
-            task: task,
-            department: department,
-            startDate: startDate,
-            endDate: endDate,
-            owner: owner,
-            isActive: isActive,
-            created: serverTimestamp(),
-          });
-          console.log("Document written with ID: ", docRef.id);
-          setTask("");
-          setDepartment("");
-          alert("Task created");
-        } catch (e) {
-          console.error("Error adding document: ", e);
-        }
-      } else {
-        alert("Please check your entries");
+    evt.preventDefault();
+    if (task.length > 0 && department.length > 0) {
+      try {
+        const docRef = await addDoc(collection(db, "tasks"), {
+          task: task,
+          department: department,
+          startDate: startDate,
+          endDate: endDate,
+          owner: owner,
+          isActive: isActive,
+          created: serverTimestamp(),
+        });
+        console.log("Document written with ID: ", docRef.id);
+        setTask("");
+        setDepartment("");
+        alert("Task created");
+      } catch (e) {
+        console.error("Error adding document: ", e);
       }
+    } else {
+      alert("Please check your entries");
     }
+  };
+  const [user, loading, error] = useAuthState(auth);
+  if (loading) {
+    return (
+      <div>
+        <p>Initialising User...</p>
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div>
+        <p>Error: {error}</p>
+      </div>
+    );
+  }
+  if (user) {
     return (
       <div>
         <div className="newUserTitle text-2xl font-bold">New Task</div>
@@ -137,7 +137,7 @@ export default function New() {
         </form>
       </div>
     );
-  };
+  }
   router.push("/");
   return null;
 }

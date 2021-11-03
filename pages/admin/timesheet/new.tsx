@@ -1,7 +1,6 @@
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import React, { useState } from "react";
-import { db } from "../../../config/firebase";
-import Box from "@mui/material/Box";
+import { auth, db } from "../../../config/firebase";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -11,6 +10,8 @@ import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import TimePicker from "@mui/lab/TimePicker";
+import { useAuthState } from "react-firebase-hooks/auth";
+import router from "next/router";
 
 export default function New() {
   const [firstName, setFirstName] = useState("");
@@ -21,7 +22,7 @@ export default function New() {
   const [time, setTime] = useState("");
   const [selectedUID, setSelectedUserID] = React.useState("");
 
-  const [usersCol, loading, error] = useCollection(collection(db, "users"), {
+  const [usersCol, loadings, errors] = useCollection(collection(db, "users"), {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
 
@@ -94,83 +95,103 @@ export default function New() {
       alert("Please check your entries");
     }
   };
-  return (
-    <div>
-      <div className="newUserTitle text-2xl font-bold">New Timesheet</div>
-      <form
-        className="userUpdateForm flex justify-between mt-5"
-        onSubmit={createTimesheet}
-      >
-        <div className="userUpdateLeft">
-          <div className="userUpdateItem flex flex-col mt-2">
-            {usersCol && (
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Workers</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={`${selectedUID as string},${firstName as string},${
-                    lastName as string
-                  }`}
-                  defaultValue=""
-                  label="Worker"
-                  onChange={handleChange}
-                >
-                  {usersCol?.docs.map((user) => (
-                    <MenuItem
-                      className="text-black"
-                      key={user.id}
-                      value={[
-                        user.id,
-                        user.get("firstName"),
-                        user.get("lastName"),
-                      ]}
-                    >
-                      {user.get("firstName") + " " + user.get("lastName")}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            )}
-            <label className="mb-1 text-sm">Date</label>
-            <input
-              type="date"
-              className="userUpdateInput text-base shadow-sm w-60 border-none border-b-2 border-gray-600 h-7"
-              onChange={(e) => setDate(e.target.value)}
-            />
-          </div>
-          <div className="userUpdateItem flex flex-col mt-2">
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <TimePicker
-                label="Time Started"
-                value={started}
-                onChange={(newValue: any) => {
-                  setStarted(newValue);
-                }}
-                renderInput={(params: any) => <TextField {...params} />}
+  const [user, loading, error] = useAuthState(auth);
+
+  if (loading) {
+    return (
+      <div>
+        <p>Initialising User...</p>
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div>
+        <p>Error: {error}</p>
+      </div>
+    );
+  }
+  if (user) {
+    return (
+      <div>
+        <div className="newUserTitle text-2xl font-bold">New Timesheet</div>
+        <form
+          className="userUpdateForm flex justify-between mt-5"
+          onSubmit={createTimesheet}
+        >
+          <div className="userUpdateLeft">
+            <div className="userUpdateItem flex flex-col mt-2">
+              {usersCol && (
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Workers</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={`${selectedUID as string},${firstName as string},${
+                      lastName as string
+                    }`}
+                    defaultValue=""
+                    label="Worker"
+                    onChange={handleChange}
+                  >
+                    {usersCol?.docs.map((user) => (
+                      <MenuItem
+                        className="text-black"
+                        key={user.id}
+                        value={[
+                          user.id,
+                          user.get("firstName"),
+                          user.get("lastName"),
+                        ]}
+                      >
+                        {user.get("firstName") + " " + user.get("lastName")}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
+              <label className="mb-1 text-sm">Date</label>
+              <input
+                type="date"
+                className="userUpdateInput text-base shadow-sm w-60 border-none border-b-2 border-gray-600 h-7"
+                onChange={(e) => setDate(e.target.value)}
               />
-            </LocalizationProvider>
+            </div>
+            <div className="userUpdateItem flex flex-col mt-2">
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <TimePicker
+                  label="Time Started"
+                  value={started}
+                  onChange={(newValue: any) => {
+                    setStarted(newValue);
+                  }}
+                  renderInput={(params: any) => <TextField {...params} />}
+                />
+              </LocalizationProvider>
+            </div>
+            <div className="userUpdateItem flex flex-col mt-2">
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <TimePicker
+                  label="Time Ended"
+                  value={ended}
+                  onChange={(newValue: any) => {
+                    setEnded(newValue);
+                  }}
+                  renderInput={(params: any) => <TextField {...params} />}
+                />
+              </LocalizationProvider>
+            </div>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+              type="submit"
+            >
+              Create
+            </button>
           </div>
-          <div className="userUpdateItem flex flex-col mt-2">
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <TimePicker
-                label="Time Ended"
-                value={ended}
-                onChange={(newValue: any) => {
-                  setEnded(newValue);
-                }}
-                renderInput={(params: any) => <TextField {...params} />}
-              />
-            </LocalizationProvider>
-          </div>
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-            type="submit"
-          >
-            Create
-          </button>
-        </div>
-      </form>
-    </div>
-  );
+        </form>
+      </div>
+    );
+  }
+  router.push("/");
+  return null;
 }

@@ -1,9 +1,11 @@
 import { SvgIconTypeMap } from "@material-ui/core";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
+import Link from "next/link";
 type Entry = {
   icon: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
-  title: String;
-  number: String;
+  title: string;
+  number: string;
+  path: string;
 };
 export default function FeaturedInfo(entry: Entry) {
   return (
@@ -19,20 +21,22 @@ export default function FeaturedInfo(entry: Entry) {
             <entry.icon className="mr-1 text-xl" />
             <p className="leading-relaxed text-xl">{entry.number}</p>
           </div>
-          <a className="mt-3 text-blue-400 inline-flex items-center">
-            View More
-            <svg
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              className="w-4 h-4 ml-2"
-              viewBox="0 0 24 24"
-            >
-              <path d="M5 12h14M12 5l7 7-7 7"></path>
-            </svg>
-          </a>
+          <Link href={entry.path}>
+            <a className="mt-3 text-blue-400 inline-flex items-center">
+              View More
+              <svg
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                className="w-4 h-4 ml-2"
+                viewBox="0 0 24 24"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7"></path>
+              </svg>
+            </a>
+          </Link>
         </div>
       </div>
     </div>

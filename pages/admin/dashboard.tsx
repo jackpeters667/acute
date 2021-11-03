@@ -25,9 +25,15 @@ function dashboard() {
             icon={MonetizationOn}
             title="Expenses"
             number="R54783"
+            path="expenses"
           />
-          <FeaturedInfo icon={Work} title="Tasks" number="5" />
-          <FeaturedInfo icon={WatchLater} title="Hours" number="41" />
+          <FeaturedInfo icon={Work} title="Tasks" number="5" path="tasks" />
+          <FeaturedInfo
+            icon={WatchLater}
+            title="Hours"
+            number="41"
+            path="timesheet"
+          />
         </div>
       </div>
       <Chart title="Active Users" data={userData} datakey={"Active Users"} />

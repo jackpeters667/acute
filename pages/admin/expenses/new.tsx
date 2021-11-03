@@ -40,7 +40,7 @@ export default function New() {
           console.log("Document written with ID: ", docRef.id);
           setName("");
           setAmount("");
-          alert("Task created");
+          alert("Expense approved");
         } catch (e) {
           console.error("Error adding document: ", e);
         }
@@ -83,7 +83,7 @@ export default function New() {
               />
             </div>
             <div className="userUpdateItem flex flex-col mt-2">
-              <label className="mb-1 text-sm">Is Active</label>
+              <label className="mb-1 text-sm">Approved</label>
               <div className="flex flex-row items-center">
                 <input
                   type="radio"

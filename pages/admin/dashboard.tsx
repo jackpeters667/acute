@@ -60,21 +60,20 @@ function dashboard() {
   if (timesheet) {
     for (let index = 0; index < timesheet.docs.length; index++) {
       const element = timesheet.docs[index];
-      const time: string = element.get("time");
+      const time: string = element.get("time") as string;
       console.log("full:", time);
       var numHours = 0;
-      if (time) {
-        var hours = time.toString().substr(0, time.toString().indexOf(";"));
-        var minutes = time.toString().substr(1, time.toString().indexOf(";"));
-        const numMinutes = +minutes;
-        if (numMinutes >= 30) {
-          numHours++;
-        }
-        console.log("hours", hours);
-        numHours = numHours + +hours;
-        totalHours = totalHours + numHours;
-        console.log(totalHours);
+
+      var hours = time.toString().split(":")[0];
+      var minutes = time.toString().split(":")[1];
+      const numMinutes = +minutes;
+      if (numMinutes >= 30) {
+        numHours++;
       }
+      console.log("hours", hours);
+      numHours = numHours + +hours;
+      totalHours = totalHours + numHours;
+      console.log(totalHours);
     }
   }
 

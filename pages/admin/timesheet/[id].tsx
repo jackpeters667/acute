@@ -4,7 +4,13 @@ import styles from "../../../styles/Users.module.css";
 import Link from "next/link";
 import { NextPage } from "next";
 import { useState } from "react";
-import { doc, getDocFromCache, updateDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  getDocFromCache,
+  Timestamp,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../../../config/firebase";
 import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -17,6 +23,26 @@ const Details: NextPage = () => {
   const docRef = doc(db, "timesheet", id as string);
   const [timeStarted, setStartTime] = useState(started);
   const [timeEnded, setEndTime] = useState(ended);
+  const [startArray, setStartArray] = useState([]);
+
+  function parseMillisecondsIntoReadableTime(milliseconds: number) {
+    //Get hours from milliseconds
+    var hours = milliseconds / (1000 * 60 * 60);
+    var absoluteHours = Math.floor(hours);
+    var h = absoluteHours > 9 ? absoluteHours : "0" + absoluteHours;
+
+    //Get remainder from hours and convert to minutes
+    var minutes = (hours - absoluteHours) * 60;
+    var absoluteMinutes = Math.floor(minutes);
+    var m = absoluteMinutes > 9 ? absoluteMinutes : "0" + absoluteMinutes;
+
+    //Get remainder from minutes and convert to seconds
+    var seconds = (minutes - absoluteMinutes) * 60;
+    var absoluteSeconds = Math.floor(seconds);
+    var s = absoluteSeconds > 9 ? absoluteSeconds : "0" + absoluteSeconds;
+
+    return h + ":" + m + ":" + s;
+  }
 
   function getTime(params: number) {
     var date = new Date((params as number) * 1000);
@@ -31,10 +57,7 @@ const Details: NextPage = () => {
     var formattedTime = hours + ":" + minutes.substr(-2);
     return `${formattedTime}`;
   }
-  function parseTime(s: any) {
-    var c = s.split(":");
-    return parseInt(c[0]) * 60 + parseInt(c[1]);
-  }
+
   // Get a document, forcing the SDK to fetch from the offline cache.
   async function getCachedDocs() {
     try {
@@ -45,37 +68,31 @@ const Details: NextPage = () => {
 
       setStartTime(getTime(doc.get("started")));
       setEndTime(getTime(doc.get("ended")));
-
-      var minutes = parseTime(timeEnded) - parseTime(timeStarted);
-      console.log("minutes:", minutes);
-      console.log("hours:", minutes / 602);
+      setStartArray(doc.get("started"));
+      console.log("timeStarted", startArray);
     } catch (e) {
       console.log("Error getting cached document:", e);
     }
   }
   getCachedDocs();
-
-  let started1: string = started as string;
-  let ended1: string = ended as string;
-  const [first, setFirstName] = useState(firstName);
-  const [last, setDepartment] = useState(lastName);
-  const [myDate, setStartDate] = useState(date);
-
-  const [myIsActive, setIsActive] = useState(false);
   const [reEnteredTime, setReenteredTime] = useState();
   const updateTimesheet = async (evt: { preventDefault: () => void }) => {
     evt.preventDefault();
-    if (first && last && id && myDate && timeStarted && timeEnded) {
+    if (reEnteredTime && id && timeStarted) {
       try {
         const documentRef = doc(db, "timesheet", id.toString());
-
+        const starting = startArray as unknown as Timestamp;
+        console.log("timeStarted", startArray);
+        var date1 = starting.toDate(); // 9:00 AM
+        var date2 = new Date(reEnteredTime); // 5:00 PM
+        console.log("date", date2);
+        console.log("date", date1);
+        var diff = date2.valueOf() - date1.valueOf();
+        var readableTime = parseMillisecondsIntoReadableTime(diff);
+        console.log(readableTime);
         await updateDoc(documentRef, {
-          firstName: first,
-          lastName: last,
-          date: myDate,
-          started: timeStarted,
-          ended: timeEnded,
-          time: myIsActive,
+          ended: reEnteredTime,
+          time: readableTime,
         });
         console.log("Document written with ID: ", documentRef.id);
         alert("Task updated");
@@ -137,7 +154,7 @@ const Details: NextPage = () => {
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <TimePicker
                       label="Time Ended"
-                      value={ended}
+                      value={reEnteredTime}
                       onChange={(newValue: any) => {
                         setReenteredTime(newValue);
                       }}

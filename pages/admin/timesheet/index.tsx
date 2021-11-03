@@ -96,7 +96,7 @@ const Timesheet: NextPage = () => {
   ];
 
   const handleDelete = async (id: any) => {
-    var r = confirm("Delete this user?");
+    var r = confirm("Delete this timesheet?");
     if (r) {
       const documentRef = doc(db, "timesheet", id.toString());
       await deleteDoc(documentRef);

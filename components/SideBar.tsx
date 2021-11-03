@@ -57,7 +57,7 @@ export default function SideBar() {
             <SideBarListItem
               icon={MonetizationOnTwoTone}
               name="Expenses"
-              path="/dashboard"
+              path="/admin/expenses"
             />
           </ul>
         </div>

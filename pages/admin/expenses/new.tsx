@@ -6,6 +6,33 @@ import { auth, db } from "../../../config/firebase";
 
 export default function New() {
   const [user, loading, error] = useAuthState(auth);
+  const [name, setName] = useState("");
+  const [amount, setAmount] = useState("");
+  const [date, setDate] = useState("");
+  const [isActive, setIsActive] = useState(false);
+
+  const createTask = async (evt: { preventDefault: () => void }) => {
+    evt.preventDefault();
+    if (name && amount && date) {
+      try {
+        const docRef = await addDoc(collection(db, "expenses"), {
+          name: name,
+          amount: amount,
+          approved: isActive,
+          date: date,
+          created: serverTimestamp(),
+        });
+        console.log("Document written with ID: ", docRef.id);
+        setName("");
+        setAmount("");
+        alert("Expense approved");
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+    } else {
+      alert("Please check your entries");
+    }
+  };
   if (loading) {
     return (
       <div>
@@ -20,34 +47,8 @@ export default function New() {
       </div>
     );
   }
-  if (user) {
-    const [name, setName] = useState("");
-    const [amount, setAmount] = useState("");
-    const [date, setDate] = useState("");
-    const [isActive, setIsActive] = useState(false);
 
-    const createTask = async (evt: { preventDefault: () => void }) => {
-      evt.preventDefault();
-      if (name && amount && date) {
-        try {
-          const docRef = await addDoc(collection(db, "expenses"), {
-            name: name,
-            amount: amount,
-            approved: isActive,
-            date: date,
-            created: serverTimestamp(),
-          });
-          console.log("Document written with ID: ", docRef.id);
-          setName("");
-          setAmount("");
-          alert("Expense approved");
-        } catch (e) {
-          console.error("Error adding document: ", e);
-        }
-      } else {
-        alert("Please check your entries");
-      }
-    };
+  if (user) {
     return (
       <div>
         <div className="newUserTitle text-2xl font-bold">New Expense</div>

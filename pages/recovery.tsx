@@ -1,4 +1,7 @@
-import { signInWithEmailAndPassword } from "@firebase/auth";
+import {
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+} from "@firebase/auth";
 import type { NextPage } from "next";
 import Link from "next/link";
 import router from "next/router";
@@ -8,7 +11,6 @@ import { auth } from "../config/firebase";
 
 const Home: NextPage = () => {
   const [email, setEmailAddress] = useState("");
-  const [pass1, setPassword] = useState("");
   const [user, loading, error] = useAuthState(auth);
   if (loading) {
     return (
@@ -27,12 +29,11 @@ const Home: NextPage = () => {
   if (user) {
     router.push("/admin/dashboard");
   }
-  const signIn = (evt: { preventDefault: () => void }) => {
+  const resetPass = (evt: { preventDefault: () => void }) => {
     evt.preventDefault();
-    signInWithEmailAndPassword(auth, email, pass1)
+    sendPasswordResetEmail(auth, email)
       .then((userCredential) => {
-        const user = userCredential.user;
-        router.push("/admin/dashboard");
+        alert("Password reset email sent");
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -50,13 +51,13 @@ const Home: NextPage = () => {
             alt="Workflow"
           />
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
+            Reset your password
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Or{" "}
-            <Link href="/register">
+            <Link href="/index">
               <a className="font-medium text-blue-600 hover:text-blue-500">
-                create a new account
+                Back to sign in
               </a>
             </Link>
           </p>
@@ -65,7 +66,7 @@ const Home: NextPage = () => {
           className="mt-8 space-y-6"
           action="#"
           method="POST"
-          onSubmit={signIn}
+          onSubmit={resetPass}
         >
           <input type="hidden" name="remember" value="true" />
           <div className="rounded-md shadow-sm -space-y-px">
@@ -80,23 +81,8 @@ const Home: NextPage = () => {
                 autoComplete="email"
                 onChange={(e) => setEmailAddress(e.target.value)}
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
               />
             </div>
           </div>

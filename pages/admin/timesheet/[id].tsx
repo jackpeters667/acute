@@ -4,28 +4,71 @@ import styles from "../../../styles/Users.module.css";
 import Link from "next/link";
 import { NextPage } from "next";
 import { useState } from "react";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, getDocFromCache, updateDoc } from "firebase/firestore";
 import { db } from "../../../config/firebase";
+import TextField from "@mui/material/TextField";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import TimePicker from "@mui/lab/TimePicker";
+
 const Details: NextPage = () => {
   const router = useRouter();
   const { id, firstName, lastName, date, started, ended, time } = router.query;
-  let fName: string = firstName as string;
-  let lName: string = lastName as string;
-  let startDate1: string = date as string;
+  const docRef = doc(db, "timesheet", id as string);
+  const [timeStarted, setStartTime] = useState(started);
+  const [timeEnded, setEndTime] = useState(ended);
+
+  function getTime(params: number) {
+    var date = new Date((params as number) * 1000);
+    // Hours part from the timestamp
+    var hours = date.getHours();
+    // Minutes part from the timestamp
+    var minutes = "0" + date.getMinutes();
+    // Seconds part from the timestamp
+    var seconds = "0" + date.getSeconds();
+
+    // Will display time in 10:30:23 format
+    var formattedTime = hours + ":" + minutes.substr(-2);
+    return `${formattedTime}`;
+  }
+  function parseTime(s: any) {
+    var c = s.split(":");
+    return parseInt(c[0]) * 60 + parseInt(c[1]);
+  }
+  // Get a document, forcing the SDK to fetch from the offline cache.
+  async function getCachedDocs() {
+    try {
+      const doc = await getDocFromCache(docRef);
+      // Document was found in the cache. If no cached document exists,
+      // an error will be returned to the 'catch' block below.
+      console.log("Cached document data:", doc.data());
+
+      setStartTime(getTime(doc.get("started")));
+      setEndTime(getTime(doc.get("ended")));
+
+      var minutes = parseTime(timeEnded) - parseTime(timeStarted);
+      console.log("minutes:", minutes);
+      console.log("hours:", minutes / 602);
+    } catch (e) {
+      console.log("Error getting cached document:", e);
+    }
+  }
+  getCachedDocs();
+
   let started1: string = started as string;
   let ended1: string = ended as string;
   const [first, setFirstName] = useState(firstName);
   const [last, setDepartment] = useState(lastName);
   const [myDate, setStartDate] = useState(date);
-  const [timeStarted, setEndDate] = useState(started);
-  const [timeEnded, setOwner] = useState(ended);
-  const [myIsActive, setIsActive] = useState(false);
 
-  const updateTask = async (evt: { preventDefault: () => void }) => {
+  const [myIsActive, setIsActive] = useState(false);
+  const [reEnteredTime, setReenteredTime] = useState();
+  const updateTimesheet = async (evt: { preventDefault: () => void }) => {
     evt.preventDefault();
     if (first && last && id && myDate && timeStarted && timeEnded) {
       try {
         const documentRef = doc(db, "timesheet", id.toString());
+
         await updateDoc(documentRef, {
           firstName: first,
           lastName: last,
@@ -77,8 +120,8 @@ const Details: NextPage = () => {
                 <span className="taskName">First Name: {firstName}</span>
                 <span className="taskName">Last Name: {lastName}</span>
                 <span className="taskName">Date: {date}</span>
-                <span className="taskName">Time Started: {started}</span>
-                <span className="taskName">Time Ended: {ended}</span>
+                <span className="taskName">Time Started: {timeStarted}</span>
+                <span className="taskName">Time Ended: {timeEnded}</span>
                 <span className="taskName">Time Difference: {time}</span>
               </div>
             </div>
@@ -87,76 +130,20 @@ const Details: NextPage = () => {
             <span className="userUpdateTitle text-2xl font-semibold">Edit</span>
             <form
               className="userUpdateForm flex justify-between mt-5"
-              onSubmit={updateTask}
+              onSubmit={updateTimesheet}
             >
               <div className="userUpdateLeft">
                 <div className="userUpdateItem flex flex-col mt-2">
-                  <label className="mb-1 text-sm">Task Name</label>
-                  <input
-                    type="text"
-                    className="userUpdateInput text-base shadow-sm w-60 border-none border-b-2 border-gray-600 h-7"
-                    placeholder={fName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                  />
-                </div>
-                <div className="userUpdateItem flex flex-col mt-2">
-                  <label className="mb-1 text-sm">Department</label>
-                  <input
-                    type="text"
-                    onChange={(e) => setDepartment(e.target.value)}
-                    className="userUpdateInput shadow-sm w-60 text-base"
-                    placeholder={lName}
-                  />
-                </div>
-                <div className="userUpdateItem flex flex-col mt-2">
-                  <label className="mb-1 text-sm">Start Date</label>
-                  <input
-                    type="date"
-                    onChange={(e) => setStartDate(e.target.value)}
-                    className="userUpdateInput shadow-sm w-60 text-base"
-                    placeholder={startDate1}
-                  />
-                </div>
-                <div className="userUpdateItem flex flex-col mt-2">
-                  <label className="mb-1 text-sm">End Date</label>
-                  <input
-                    type="date"
-                    onChange={(e) => setEndDate(e.target.value)}
-                    className="userUpdateInput shadow-sm w-60 text-base"
-                    placeholder={started1}
-                  />
-                </div>
-                <div className="userUpdateItem flex flex-col mt-2">
-                  <label className="mb-1 text-sm">Owner</label>
-                  <input
-                    type="text"
-                    onChange={(e) => setOwner(e.target.value)}
-                    className="userUpdateInput shadow-sm w-60 text-base"
-                    placeholder={ended1}
-                  />
-                </div>
-                <div className="userUpdateItem flex flex-col mt-2">
-                  <label className="mb-1 text-sm">Is Active</label>
-                  <div className="flex flex-row items-center">
-                    <input
-                      type="radio"
-                      id="yes"
-                      name="active"
-                      value="Yes"
-                      onClick={(e) => setIsActive(true)}
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <TimePicker
+                      label="Time Ended"
+                      value={ended}
+                      onChange={(newValue: any) => {
+                        setReenteredTime(newValue);
+                      }}
+                      renderInput={(params: any) => <TextField {...params} />}
                     />
-                    <label htmlFor="yes">Yes</label>
-                  </div>
-                  <div className="flex flex-row items-center">
-                    <input
-                      type="radio"
-                      id="no"
-                      name="active"
-                      value="No"
-                      onClick={(e) => setIsActive(false)}
-                    />
-                    <label htmlFor="no">No</label>
-                  </div>
+                  </LocalizationProvider>
                 </div>
                 <button
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"

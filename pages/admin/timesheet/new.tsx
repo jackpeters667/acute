@@ -31,28 +31,41 @@ export default function New() {
     setLastName(event.target.value[2] as string);
     console.log(event.target.value);
   };
+  function parseMillisecondsIntoReadableTime(milliseconds: number) {
+    //Get hours from milliseconds
+    var hours = milliseconds / (1000 * 60 * 60);
+    var absoluteHours = Math.floor(hours);
+    var h = absoluteHours > 9 ? absoluteHours : "0" + absoluteHours;
 
+    //Get remainder from hours and convert to minutes
+    var minutes = (hours - absoluteHours) * 60;
+    var absoluteMinutes = Math.floor(minutes);
+    var m = absoluteMinutes > 9 ? absoluteMinutes : "0" + absoluteMinutes;
+
+    //Get remainder from minutes and convert to seconds
+    var seconds = (minutes - absoluteMinutes) * 60;
+    var absoluteSeconds = Math.floor(seconds);
+    var s = absoluteSeconds > 9 ? absoluteSeconds : "0" + absoluteSeconds;
+
+    return h + ":" + m + ":" + s;
+  }
   const createTimesheet = async (evt: { preventDefault: () => void }) => {
     evt.preventDefault();
     if (firstName && lastName && date && started) {
       try {
-        let diff;
+        let diff: any;
         if (ended) {
-          diff = ended - started;
-          var msec = diff;
-          var hh = Math.floor(msec / 1000 / 60 / 60);
-          msec -= hh * 1000 * 60 * 60;
-          var mm = Math.floor(msec / 1000 / 60);
-          msec -= mm * 1000 * 60;
-          var ss = Math.floor(msec / 1000);
-          msec -= ss * 1000;
+          var date1 = new Date(started); // 9:00 AM
+          var date2 = new Date(ended); // 5:00 PM
+          diff = date2.valueOf() - date1.valueOf();
+          var readableTime = parseMillisecondsIntoReadableTime(diff);
           const docRef = await addDoc(collection(db, "timesheet"), {
             firstName: firstName,
             lastName: lastName,
             date: date,
             started: started,
             ended: ended,
-            time: msec,
+            time: readableTime,
             created: serverTimestamp(),
           });
           console.log("Document written with ID: ", docRef.id);

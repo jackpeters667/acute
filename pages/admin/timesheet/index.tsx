@@ -79,7 +79,7 @@ const Timesheet: NextPage = () => {
                   firstName: params.row.firstName,
                   lastName: params.row.lastName,
                   date: params.row.date,
-                  started: params.row.started,
+                  started: params.row.started.seconds,
                   ended: params.row.ended,
                   time: params.row.time,
                 },

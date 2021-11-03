@@ -1,14 +1,28 @@
 import { MonetizationOn, WatchLater, Work } from "@mui/icons-material";
-import React from "react";
+import React, { useState } from "react";
 import FeaturedInfo from "../../components/cards/FeaturedInfo";
 import Chart from "../../components/Chart";
 import { userData } from "../../data/chartData";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../config/firebase";
+import { auth, db } from "../../config/firebase";
 import router from "next/router";
+import { useCollection } from "react-firebase-hooks/firestore";
+import { collection } from "firebase/firestore";
 
 function dashboard() {
   const [user, loading, error] = useAuthState(auth);
+  const [value, loadings, errors] = useCollection(collection(db, "expenses"), {
+    snapshotListenOptions: { includeMetadataChanges: true },
+  });
+  var totalExpenses: number = 0;
+  if (value) {
+    for (let index = 0; index < value?.docs.length; index++) {
+      if (value.docs[index].get("approved")) {
+        totalExpenses = (+totalExpenses +
+          +value.docs[index].get("amount")) as number;
+      }
+    }
+  }
   if (loading) {
     return (
       <div>
@@ -39,7 +53,7 @@ function dashboard() {
             <FeaturedInfo
               icon={MonetizationOn}
               title="Expenses"
-              number="R54783"
+              number={totalExpenses as unknown as string}
               path="expenses"
             />
             <FeaturedInfo icon={Work} title="Tasks" number="5" path="tasks" />

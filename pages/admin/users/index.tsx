@@ -7,10 +7,10 @@ import { db, auth } from "../../../config/firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import router from "next/router";
-import AddToTable from "../../../components/AddToTable";
 import TextField from "@mui/material/TextField";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import InputAdornment from "@mui/material/InputAdornment";
+import PageHeader from "../../../components/PageHeader";
 export default function users() {
   const [user, loading, error] = useAuthState(auth);
 
@@ -81,10 +81,8 @@ export default function users() {
     };
 
     return (
-      <div style={{ height: "100%", width: "100%" }}>
-        <div className=" mx-10 flex flex-row justify-between w-full">
-          <AddToTable path="users/new" />
-        </div>
+      <div style={{ height: "80%", width: "100%" }}>
+        <PageHeader path="users/new" text="User" />
 
         {value && (
           <DataGrid

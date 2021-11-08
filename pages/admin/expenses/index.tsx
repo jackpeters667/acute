@@ -7,7 +7,7 @@ import { auth, db } from "../../../config/firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import router from "next/router";
-import AddToTable from "../../../components/AddToTable";
+import PageHeader from "../../../components/PageHeader";
 
 export default function users() {
   const [user, loading, error] = useAuthState(auth);
@@ -90,7 +90,7 @@ export default function users() {
 
     return (
       <div style={{ height: 800, width: "100%" }}>
-        <AddToTable path="expenses/new" />
+        <PageHeader path="expenses/new" text="Expenses" />
         {value && (
           <DataGrid
             rows={value.docs.map((row) => {

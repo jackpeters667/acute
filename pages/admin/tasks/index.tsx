@@ -8,7 +8,7 @@ import { deleteDoc, collection, doc } from "firebase/firestore";
 import { auth, db } from "../../../config/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import router from "next/router";
-import AddToTable from "../../../components/AddToTable";
+import PageHeader from "../../../components/PageHeader";
 
 const Tasks: NextPage = () => {
   const [user, loading, error] = useAuthState(auth);
@@ -97,7 +97,7 @@ const Tasks: NextPage = () => {
 
     return (
       <div style={{ height: 300, width: "100%" }}>
-        <AddToTable path="tasks/new" />
+        <PageHeader text="Tasks" path="tasks/new" />
         {value && (
           <DataGrid
             rows={value.docs.map((row) => {

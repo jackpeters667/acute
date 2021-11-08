@@ -3,7 +3,6 @@ import React from "react";
 import styles from "../../../styles/Users.module.css";
 import {
   DataGrid,
-  GridRowsProp,
   GridColDef,
   GridValueFormatterParams,
 } from "@mui/x-data-grid";
@@ -15,7 +14,7 @@ import { deleteDoc, collection, doc } from "firebase/firestore";
 import { db, auth } from "../../../config/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import router from "next/router";
-import AddToTable from "../../../components/AddToTable";
+import PageHeader from "../../../components/PageHeader";
 
 const Timesheet: NextPage = () => {
   const [user, loading, error] = useAuthState(auth);
@@ -124,7 +123,7 @@ const Timesheet: NextPage = () => {
 
     return (
       <div style={{ height: 300, width: "100%" }}>
-        <AddToTable path="timesheet/new" />
+        <PageHeader text="Timesheet" path="timesheet/new" />
         {value && (
           <DataGrid
             rows={value.docs.map((row) => {

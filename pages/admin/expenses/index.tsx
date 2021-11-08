@@ -8,6 +8,7 @@ import { useCollection } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import router from "next/router";
 import PageHeader from "../../../components/PageHeader";
+import { confirmDialog } from "../../../components/ConfirmDialog";
 
 export default function users() {
   const [user, loading, error] = useAuthState(auth);
@@ -80,12 +81,11 @@ export default function users() {
     ];
 
     const handleDelete = async (id: any) => {
-      var r = confirm("Delete this expense?");
-      if (r) {
+      confirmDialog("Do you want to delete this expense?", async () => {
         const documentRef = doc(db, "expenses", id.toString());
         await deleteDoc(documentRef);
         console.log("Document written with ID: ", documentRef.id);
-      }
+      });
     };
 
     return (

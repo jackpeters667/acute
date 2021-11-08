@@ -15,7 +15,7 @@ import { db, auth } from "../../../config/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import router from "next/router";
 import PageHeader from "../../../components/PageHeader";
-
+import { confirmDialog } from "../../../components/ConfirmDialog";
 const Timesheet: NextPage = () => {
   const [user, loading, error] = useAuthState(auth);
   function getTime(params: GridValueFormatterParams) {
@@ -113,12 +113,11 @@ const Timesheet: NextPage = () => {
     ];
 
     const handleDelete = async (id: any) => {
-      var r = confirm("Delete this timesheet?");
-      if (r) {
+      confirmDialog("Do you want to delete this timesheet?", async () => {
         const documentRef = doc(db, "timesheet", id.toString());
         await deleteDoc(documentRef);
         console.log("Document written with ID: ", documentRef.id);
-      }
+      });
     };
 
     return (

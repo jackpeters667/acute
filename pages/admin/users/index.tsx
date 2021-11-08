@@ -11,9 +11,7 @@ import TextField from "@mui/material/TextField";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import InputAdornment from "@mui/material/InputAdornment";
 import PageHeader from "../../../components/PageHeader";
-import ConfirmDialog, {
-  confirmDialog,
-} from "../../../components/ConfirmDialog";
+import { confirmDialog } from "../../../components/ConfirmDialog";
 export default function users() {
   const [user, loading, error] = useAuthState(auth);
 
@@ -85,7 +83,6 @@ export default function users() {
     return (
       <div style={{ height: "80%", width: "100%" }}>
         <PageHeader path="users/new" text="User" />
-        <ConfirmDialog />
         {value && (
           <DataGrid
             rows={value.docs.map((row) => {

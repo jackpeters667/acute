@@ -9,6 +9,7 @@ import { auth, db } from "../../../config/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import router from "next/router";
 import PageHeader from "../../../components/PageHeader";
+import { confirmDialog } from "../../../components/ConfirmDialog";
 
 const Tasks: NextPage = () => {
   const [user, loading, error] = useAuthState(auth);
@@ -87,12 +88,11 @@ const Tasks: NextPage = () => {
     ];
 
     const handleDelete = async (id: any) => {
-      var r = confirm("Delete this task?");
-      if (r) {
+      confirmDialog("Do you want to delete this task?", async () => {
         const documentRef = doc(db, "tasks", id.toString());
         await deleteDoc(documentRef);
         console.log("Document written with ID: ", documentRef.id);
-      }
+      });
     };
 
     return (

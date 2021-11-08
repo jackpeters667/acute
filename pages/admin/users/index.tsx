@@ -7,11 +7,9 @@ import { db, auth } from "../../../config/firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import router from "next/router";
-import TextField from "@mui/material/TextField";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import InputAdornment from "@mui/material/InputAdornment";
 import PageHeader from "../../../components/PageHeader";
 import { confirmDialog } from "../../../components/ConfirmDialog";
+import DialogNewUser from "../../../components/users/DialogNewUser";
 export default function users() {
   const [user, loading, error] = useAuthState(auth);
 
@@ -83,6 +81,9 @@ export default function users() {
     return (
       <div style={{ height: "80%", width: "100%" }}>
         <PageHeader path="users/new" text="User" />
+        <div className="mx-10 mb-6">
+          <DialogNewUser />
+        </div>
         {value && (
           <DataGrid
             rows={value.docs.map((row) => {

@@ -1,6 +1,6 @@
 import styles from "../../../styles/Users.module.css";
-import { DataGrid, GridRowsProp, GridColDef } from "@mui/x-data-grid";
-import { DeleteOutline, ModeEdit } from "@mui/icons-material";
+import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
+import { DeleteOutline, ModeEdit, Search } from "@mui/icons-material";
 import Link from "next/link";
 import { deleteDoc, collection, doc } from "firebase/firestore";
 import { db, auth } from "../../../config/firebase";
@@ -8,7 +8,9 @@ import { useCollection } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import router from "next/router";
 import AddToTable from "../../../components/AddToTable";
-
+import TextField from "@mui/material/TextField";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import InputAdornment from "@mui/material/InputAdornment";
 export default function users() {
   const [user, loading, error] = useAuthState(auth);
 
@@ -79,8 +81,11 @@ export default function users() {
     };
 
     return (
-      <div style={{ height: 800, width: "100%" }}>
-        <AddToTable path="users/new" />
+      <div style={{ height: "100%", width: "100%" }}>
+        <div className=" mx-10 flex flex-row justify-between w-full">
+          <AddToTable path="users/new" />
+        </div>
+
         {value && (
           <DataGrid
             rows={value.docs.map((row) => {
@@ -94,6 +99,9 @@ export default function users() {
             checkboxSelection
             disableSelectionOnClick
             pageSize={8}
+            components={{
+              Toolbar: GridToolbar,
+            }}
           />
         )}
       </div>

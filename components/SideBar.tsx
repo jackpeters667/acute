@@ -47,6 +47,11 @@ export default function SideBar() {
               name="Project Management"
               path="/admin/tasks"
             />
+            <SideBarListItem
+              icon={SettingsTwoTone}
+              name="Departments"
+              path="/admin/departments"
+            />
           </ul>
         </div>
         <div className="sidebarMenu mb-3">

@@ -14,8 +14,16 @@ import { DialogActions, DialogContent, DialogTitle, Box } from "@mui/material";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { Mail, Add, Phone, Person } from "@mui/icons-material";
+import { useCollection } from "react-firebase-hooks/firestore";
 
 export default function DialogNewUser() {
+  const [departmentsCol, loadings, errors] = useCollection(
+    collection(db, "departments"),
+    {
+      snapshotListenOptions: { includeMetadataChanges: true },
+    }
+  );
+
   const [departmentName, setDepartmentName] = React.useState("");
   const [departmentID, setDepartmentID] = React.useState("");
 
@@ -72,9 +80,8 @@ export default function DialogNewUser() {
   };
 
   const handleChange = (event: SelectChangeEvent) => {
-    const depo = event.target.value as unknown as Department;
-    setDepartmentID(depo.id);
-    setDepartmentName(depo.name);
+    setDepartmentID(event.target.value[0] as string);
+    setDepartmentName(event.target.value[1] as string);
   };
 
   const createUser = async () => {
@@ -85,6 +92,7 @@ export default function DialogNewUser() {
           lastName: lastName,
           emailAddress: emailAddress,
           phoneNumber: phoneNumber,
+          department: departmentID,
           created: serverTimestamp(),
         });
         console.log("Document written with ID: ", docRef.id);
@@ -188,9 +196,15 @@ export default function DialogNewUser() {
                 onChange={handleChange}
                 renderValue={(value) => <span>{departmentName}</span>}
               >
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+                {departmentsCol?.docs.map((department) => (
+                  <MenuItem
+                    className="text-black"
+                    key={department.id}
+                    value={[department.id, department.get("departmentName")]}
+                  >
+                    {department.get("departmentName")}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>

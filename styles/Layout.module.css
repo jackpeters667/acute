@@ -2,7 +2,8 @@
   flex: 1;
   height: calc(100vh - 48px);
   top: 48px;
-  background-color: rgb(251, 251, 255);
+  /*color: rgb(251, 251, 255);*/
+  background-color: rgba(17, 24, 39, var(--tw-bg-opacity));
 }
 
 .others {

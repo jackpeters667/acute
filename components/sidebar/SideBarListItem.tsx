@@ -10,7 +10,7 @@ type Entry = {
 export default function SideBarListItem(props: Entry) {
   return (
     <Link href={props.path}>
-      <li className="text-gray-800 cursor-pointer p-1 flex items-center rounded-xl hover:bg-gray-100">
+      <li className="text-gray-100 cursor-pointer p-1 flex items-center rounded-xl hover:bg-gray-600">
         <props.icon className="mr-1 text-xl" />
         {props.name}
       </li>

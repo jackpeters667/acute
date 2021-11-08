@@ -13,10 +13,10 @@ import SideBarListItem from "./sidebar/SideBarListItem";
 
 export default function SideBar() {
   return (
-    <div className={styles.sidebar + " sticky"}>
-      <div className="sidebarWrapper p-5 text-gray-600">
+    <div className={styles.sidebar + " sticky bg-gray-900"}>
+      <div className="sidebarWrapper p-5 text-gray-200 bg-gray-900">
         <div className="sidebarMenu mb-3">
-          <h3 className="sidebarTitle font-bold text-sm text-gray-600">
+          <h3 className="sidebarTitle font-bold text-sm text-gray-200">
             Dashboard
           </h3>
           <ul className="sidebarList p-1">
@@ -28,7 +28,7 @@ export default function SideBar() {
           </ul>
         </div>
         <div className="sidebarMenu mb-3">
-          <h3 className="sidebarTitle font-bold text-sm text-gray-600">
+          <h3 className="sidebarTitle font-bold text-sm text-gray-200">
             Management
           </h3>
           <ul className="sidebarList p-1">
@@ -50,7 +50,7 @@ export default function SideBar() {
           </ul>
         </div>
         <div className="sidebarMenu mb-3">
-          <h3 className="sidebarTitle font-bold text-sm text-gray-600">
+          <h3 className="sidebarTitle font-bold text-sm text-gray-200">
             Records
           </h3>
           <ul className="sidebarList p-1">

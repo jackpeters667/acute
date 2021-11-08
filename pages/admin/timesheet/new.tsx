@@ -32,6 +32,7 @@ export default function New() {
     setLastName(event.target.value[2] as string);
     console.log(event.target.value);
   };
+
   function parseMillisecondsIntoReadableTime(milliseconds: number) {
     //Get hours from milliseconds
     var hours = milliseconds / (1000 * 60 * 60);
@@ -127,9 +128,12 @@ export default function New() {
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    value={`${selectedUID as string},${firstName as string},${
-                      lastName as string
-                    }`}
+                    // value={`${selectedUID as string},${firstName as string},${
+                    //   lastName as string
+                    // }`}
+                    renderValue={(value) => (
+                      <span>{firstName + " " + lastName}</span>
+                    )}
                     defaultValue=""
                     label="Worker"
                     onChange={handleChange}

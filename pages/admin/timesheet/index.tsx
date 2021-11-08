@@ -123,6 +123,9 @@ const Timesheet: NextPage = () => {
     return (
       <div style={{ height: 300, width: "100%" }}>
         <PageHeader text="Timesheet" path="timesheet/new" />
+        <Link href="timesheet/new">
+          <a>Hello</a>
+        </Link>
         {value && (
           <DataGrid
             rows={value.docs.map((row) => {

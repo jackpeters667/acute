@@ -7,3 +7,8 @@ type Task = {
   owner: string;
   isActive: boolean;
 };
+
+interface Department {
+  id:string,
+  name: string
+}

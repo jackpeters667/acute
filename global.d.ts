@@ -9,8 +9,8 @@ type Task = {
 };
 
 interface Department {
-  id: string;
-  name: string;
+  department: string;
+  departmentName: string;
 }
 
 interface User {

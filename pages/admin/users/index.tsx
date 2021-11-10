@@ -10,9 +10,12 @@ import router from "next/router";
 import PageHeader from "../../../components/PageHeader";
 import { confirmDialog } from "../../../components/ConfirmDialog";
 import DialogNewUser from "../../../components/users/DialogNewUser";
+import DialogEditUser from "../../../components/users/DialogEditUser";
+import { useState } from "react";
 export default function users() {
+  const [editUser, setEditUser] = useState(false);
   const [user, loading, error] = useAuthState(auth);
-
+  const [userToEdit, setUserToEdit] = useState<any>(null);
   const [value, loadings, errors] = useCollection(collection(db, "users"), {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
@@ -44,27 +47,35 @@ export default function users() {
       {
         field: "action",
         headerName: "Action",
-        width: 150,
+        width: 200,
         renderCell: (params: {
-          row: { id: any; firstName: string; lastName: string };
+          row: {
+            id: any;
+            firstName: string;
+            lastName: string;
+            emailAddress: string | undefined;
+            phoneNumber: string;
+            department: string;
+            departmentName: string;
+          };
         }) => {
           return (
-            <div className="cursor-pointer p-2">
+            <div className="cursor-pointer p-2 flex flex-row items-center">
               {/* change id number to be from array */}
               {/*Or below works */}
               {/* <Link href={`/admin/users/${encodeURIComponent("id")}`}> </Link> */}
-              <Link
-                href={{
-                  pathname: "users/[id]",
-                  query: {
-                    id: params.row.id,
-                    firstName: params.row.firstName,
-                    lastName: params.row.lastName,
-                  },
-                }}
+              <div
+              // href={{
+              //   pathname: "users/[id]",
+              //   query: {
+              //     id: params.row.id,
+              //     firstName: params.row.firstName,
+              //     lastName: params.row.lastName,
+              //   },
+              // }}
               >
-                <ModeEdit />
-              </Link>
+                <ModeEdit onClick={() => showOpenDialog(params.row)} />
+              </div>
 
               <DeleteOutline onClick={() => handleDelete(params.row.id)} />
             </div>
@@ -81,11 +92,38 @@ export default function users() {
       });
     };
 
+    const showOpenDialog = (row: {
+      id: any;
+      firstName: string;
+      lastName: string;
+      emailAddress: string | undefined;
+      phoneNumber: string;
+      department: string;
+      departmentName: string;
+    }): void => {
+      let user: User = {
+        id: row.id,
+        firstName: row.firstName,
+        lastName: row.lastName,
+        department: row.department,
+        departmentName: row.departmentName,
+        emailAddress: row.emailAddress,
+        phoneNumber: row.phoneNumber,
+      };
+      setUserToEdit(user);
+      setEditUser(true);
+    };
+
     return (
       <div style={{ height: "80%", width: "100%" }}>
         <PageHeader path="users/new" text="User" />
         <div className="mx-10 mb-6">
           <DialogNewUser />
+          <DialogEditUser
+            user={userToEdit}
+            dialogState={setEditUser}
+            dialogOpen={editUser}
+          />
         </div>
         {value && (
           <DataGrid

@@ -9,13 +9,14 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import router from "next/router";
 import PageHeader from "../../../components/PageHeader";
 import { confirmDialog } from "../../../components/ConfirmDialog";
-import DialogNewUser from "../../../components/users/DialogNewUser";
-import DialogEditUser from "../../../components/users/DialogEditUser";
+import DialogNewDepartment from "../../../components/departments/DialogNewDepartment";
+import DialogEditDepartment from "../../../components/departments/DialogEditDepartment";
 import { useState } from "react";
 export default function users() {
-  const [editUser, setEditDepartment] = useState(false);
+  const [editDepartment, setEditDepartment] = useState(false);
   const [user, loading, error] = useAuthState(auth);
-  const [userToEdit, setDepartmentToEdit] = useState<any>(null);
+  const [departmentName, setDepartmentName] = useState("");
+  const [departmentID, setDepartmentID] = useState("");
   const [value, loadings, errors] = useCollection(
     collection(db, "departments"),
     {
@@ -87,7 +88,8 @@ export default function users() {
         department: row.id,
         departmentName: row.departmentName,
       };
-      setDepartmentToEdit(department);
+      setDepartmentName(department.departmentName);
+      setDepartmentID(department.department);
       setEditDepartment(true);
     };
 
@@ -96,10 +98,11 @@ export default function users() {
         <PageHeader path="departments/new" text="Departments" />
         <div className="mx-10 mb-6">
           <DialogNewDepartment />
-          <DialogEditUser
-            user={userToEdit}
+          <DialogEditDepartment
+            departmentName={departmentName}
+            department_id={departmentID}
             dialogState={setEditDepartment}
-            dialogOpen={editUser}
+            dialogOpen={false}
           />
         </div>
         {value && (

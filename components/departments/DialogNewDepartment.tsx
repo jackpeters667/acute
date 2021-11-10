@@ -1,20 +1,9 @@
 import * as React from "react";
-import {
-  TextField,
-  Dialog,
-  Button,
-  InputAdornment,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  FormHelperText,
-} from "@mui/material";
+import { TextField, Dialog, Button, InputAdornment } from "@mui/material";
 import { DialogActions, DialogContent, DialogTitle, Box } from "@mui/material";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../config/firebase";
-import { Mail, Add, Phone, Person } from "@mui/icons-material";
+import { Add, Build, Person } from "@mui/icons-material";
 import { useCollection } from "react-firebase-hooks/firestore";
 
 export default function DialogNewDepartment() {
@@ -86,7 +75,7 @@ export default function DialogNewDepartment() {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Person />
+                      <Build />
                     </InputAdornment>
                   ),
                 }}

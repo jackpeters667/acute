@@ -9,6 +9,7 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  FormHelperText,
 } from "@mui/material";
 import { DialogActions, DialogContent, DialogTitle, Box } from "@mui/material";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
@@ -26,7 +27,7 @@ export default function DialogNewUser() {
 
   const [departmentName, setDepartmentName] = React.useState("");
   const [departmentID, setDepartmentID] = React.useState("");
-
+  const [departmentError, setDepartmentError] = React.useState(true);
   const [firstName, setFirstName] = React.useState("");
   const [firstNameError, setFirstNameError] = React.useState(false);
   const [firstNameHelper, setFirstNameHelper] = React.useState("");
@@ -80,12 +81,18 @@ export default function DialogNewUser() {
   };
 
   const handleChange = (event: SelectChangeEvent) => {
+    setDepartmentError(false);
     setDepartmentID(event.target.value[0] as string);
     setDepartmentName(event.target.value[1] as string);
   };
 
   const createUser = async () => {
-    if (!lastNameError && !firstNameError && !phoneNumberError) {
+    if (
+      !lastNameError &&
+      !firstNameError &&
+      !phoneNumberError &&
+      !departmentError
+    ) {
       try {
         const docRef = await addDoc(collection(db, "users"), {
           firstName: firstName,
@@ -93,6 +100,7 @@ export default function DialogNewUser() {
           emailAddress: emailAddress,
           phoneNumber: phoneNumber,
           department: departmentID,
+          departmentName: departmentName,
           created: serverTimestamp(),
         });
         console.log("Document written with ID: ", docRef.id);
@@ -187,7 +195,7 @@ export default function DialogNewUser() {
                 }}
               />
             </div>
-            <FormControl fullWidth>
+            <FormControl fullWidth error={departmentError}>
               <InputLabel id="demo-simple-select-label">department</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
@@ -206,6 +214,9 @@ export default function DialogNewUser() {
                   </MenuItem>
                 ))}
               </Select>
+              {departmentError && (
+                <FormHelperText>This is required!</FormHelperText>
+              )}
             </FormControl>
           </Box>
         </DialogContent>

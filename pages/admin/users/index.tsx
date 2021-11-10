@@ -38,6 +38,9 @@ export default function users() {
         width: 200,
       },
       { field: "lastName", headerName: "Last Name", width: 200 },
+      { field: "emailAddress", headerName: "Email", width: 200 },
+      { field: "phoneNumber", headerName: "Phone", width: 200 },
+      { field: "department", headerName: "Department", width: 200 },
       {
         field: "action",
         headerName: "Action",
@@ -91,6 +94,9 @@ export default function users() {
                 id: row.id,
                 firstName: row.get("firstName"),
                 lastName: row.get("lastName"),
+                emailAddress: row.get("emailAddress"),
+                phoneNumber: row.get("phoneNumber"),
+                department: row.get("departmentName"),
               };
             })}
             columns={columns}

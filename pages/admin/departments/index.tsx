@@ -95,7 +95,7 @@ export default function users() {
       <div style={{ height: "80%", width: "100%" }}>
         <PageHeader path="departments/new" text="Departments" />
         <div className="mx-10 mb-6">
-          <DialogNewUser />
+          <DialogNewDepartment />
           <DialogEditUser
             user={userToEdit}
             dialogState={setEditDepartment}

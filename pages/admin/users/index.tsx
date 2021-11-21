@@ -61,7 +61,7 @@ export default function users() {
         }) => {
           return (
             <div className="cursor-pointer p-2 flex flex-row items-center">
-              {/* change id number to be from array */}
+              {/* change id number to be fuserrom array */}
               {/*Or below works */}
               {/* <Link href={`/admin/users/${encodeURIComponent("id")}`}> </Link> */}
               <div

@@ -23,37 +23,32 @@ import { Mail, Phone, Person } from "@mui/icons-material";
 import { useCollection } from "react-firebase-hooks/firestore";
 
 export default function DialogEditUser(props: {
-  user: EditUser | undefined;
+  user: User;
   dialogState: React.Dispatch<React.SetStateAction<boolean>>;
   dialogOpen: boolean;
 }) {
+  const setDialogOpen = props.dialogState;
+  const [departmentName, setDepartmentName] = React.useState("");
+  const [departmentID, setDepartmentID] = React.useState("");
+  const [departmentError, setDepartmentError] = React.useState(true);
+  const [firstName, setFirstName] = React.useState("");
+  const [firstNameError, setFirstNameError] = React.useState(false);
+  const [firstNameHelper, setFirstNameHelper] = React.useState("");
+  const [lastName, setLastName] = React.useState("");
+  const [lastNameError, setLastNameError] = React.useState(false);
+  const [lastNameHelper, setLastNameHelper] = React.useState("");
+  const [phoneNumber, setPhoneNumber] = React.useState("");
+  const [emailAddress, setEmailAddress] = React.useState("");
+  const [phoneNumberError, setPhoneNumberError] = React.useState(false);
+  const [phoneNumberHelper, setPhoneNumberHelper] = React.useState("");
+  const err: string = "This is a required field";
+
   const [departmentsCol, loadings, errors] = useCollection(
     collection(db, "departments"),
     {
       snapshotListenOptions: { includeMetadataChanges: true },
     }
   );
-
-  let myUser = props.user?.user;
-  const setDialogOpen = props.dialogState;
-  const [departmentName, setDepartmentName] = React.useState(
-    myUser?.departmentName
-  );
-  console.log("user:", props);
-  const [departmentID, setDepartmentID] = React.useState(myUser?.department);
-  const [departmentError, setDepartmentError] = React.useState(true);
-  const [firstName, setFirstName] = React.useState(myUser?.firstName);
-  const [firstNameError, setFirstNameError] = React.useState(false);
-  const [firstNameHelper, setFirstNameHelper] = React.useState("");
-  const [lastName, setLastName] = React.useState(myUser?.lastName);
-  const [lastNameError, setLastNameError] = React.useState(false);
-  const [lastNameHelper, setLastNameHelper] = React.useState("");
-  const [phoneNumber, setPhoneNumber] = React.useState(myUser?.phoneNumber);
-  const [emailAddress, setEmailAddress] = React.useState(myUser?.emailAddress);
-  const [phoneNumberError, setPhoneNumberError] = React.useState(false);
-  const [phoneNumberHelper, setPhoneNumberHelper] = React.useState("");
-  const err: string = "This is a required field";
-
   function checkFirstName(e: string) {
     setFirstName(e);
     if (e.length != 0) {
@@ -85,49 +80,89 @@ export default function DialogEditUser(props: {
     console.log("phone", phoneNumber);
   }
 
-  const handleClose = () => {
-    setDialogOpen(false);
-  };
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setDepartmentError(false);
-    setDepartmentID(event.target.value[0] as string);
-    setDepartmentName(event.target.value[1] as string);
-  };
-
-  const createUser = async () => {
-    if (
-      !lastNameError &&
-      !firstNameError &&
-      !phoneNumberError &&
-      !departmentError
-    ) {
-      try {
-        let uid = myUser?.id;
-        if (uid) {
-          const documentRef = doc(db, "users", uid.toString());
-          await updateDoc(documentRef, {
-            firstName: firstName,
-            lastName: lastName,
-            emailAddress: emailAddress,
-            phoneNumber: phoneNumber,
-            department: departmentID,
-            departmentName: departmentName,
-            created: serverTimestamp(),
-          });
-          console.log("Document written with ID: ", documentRef.id);
-          setDialogOpen(false);
-        }
-      } catch (e) {
-        console.error("Error adding document: ", e);
-      }
+  const initState = (user: User) => () => {
+    console.log("in method: ", user);
+    setFirstName(user.firstName);
+    setLastName(user.lastName);
+    setDepartmentName(user.departmentName);
+    setDepartmentID(user.department);
+    if (user.emailAddress) {
+      setEmailAddress(user.emailAddress);
     }
+    setPhoneNumber(user.phoneNumber);
   };
 
-  return (
-    <div>
-      {props.user?.user && (
-        <Dialog open={props.dialogOpen} onClose={handleClose}>
+  if (props.user) {
+    let user = props.user;
+    console.log("first name: ", firstName);
+    // setDepartmentName(user.departmentName);
+    // setFirstName(user.firstName);
+    // setLastName(user.lastName);
+    // if (user.emailAddress) {
+    //   setEmailAddress(user.emailAddress);
+    // }
+    // setPhoneNumber(user.phoneNumber);
+
+    //    console.log("First Name ", firstName);
+    const handleClose = () => {
+      setDialogOpen(false);
+    };
+
+    const handleChange = (event: SelectChangeEvent) => {
+      setDepartmentError(false);
+      setDepartmentID(event.target.value[0] as string);
+      setDepartmentName(event.target.value[1] as string);
+    };
+
+    const editUser = async () => {
+      if (firstNameError) {
+        setFirstName(props.user.firstName);
+        setFirstNameError(false);
+      }
+      if (lastNameError) {
+        setLastName(props.user.lastName);
+        setLastNameError(false);
+      }
+      if (phoneNumberError) {
+        setPhoneNumber(props.user.phoneNumber);
+        setPhoneNumberError(false);
+      }
+      if (departmentError) {
+        setDepartmentID(props.user.department);
+        setDepartmentName(props.user.departmentName);
+        setDepartmentError(false);
+      }
+      if (
+        !lastNameError &&
+        !firstNameError &&
+        !phoneNumberError &&
+        !departmentError
+      ) {
+        try {
+          let uid = props.user.id;
+          if (uid) {
+            const documentRef = doc(db, "users", uid.toString());
+            await updateDoc(documentRef, {
+              firstName: firstName,
+              lastName: lastName,
+              emailAddress: emailAddress,
+              phoneNumber: phoneNumber,
+              department: departmentID,
+              departmentName: departmentName,
+              created: serverTimestamp(),
+            });
+            console.log("Document written with ID: ", documentRef.id);
+            setDialogOpen(false);
+          }
+        } catch (e) {
+          console.error("Error adding document: ", e);
+        }
+      }
+    };
+
+    return (
+      <div>
+        <Dialog open={props.dialogOpen} onClose={() => handleClose}>
           <DialogTitle>Edit User</DialogTitle>
           <DialogContent>
             <Box
@@ -144,7 +179,7 @@ export default function DialogEditUser(props: {
                   id="outlined-error-helper-text"
                   label="first name"
                   placeholder="Alice"
-                  defaultValue={myUser?.firstName}
+                  defaultValue={user.firstName}
                   onChange={(e) => checkFirstName(e.target.value)}
                   helperText={firstNameHelper}
                   InputProps={{
@@ -160,7 +195,7 @@ export default function DialogEditUser(props: {
                   id="outlined-error-helper-text"
                   label="last name"
                   placeholder="Malice"
-                  defaultValue={myUser?.lastName}
+                  defaultValue={user.lastName}
                   onChange={(e) => checkLastName(e.target.value)}
                   helperText={lastNameHelper}
                   type="text"
@@ -177,7 +212,7 @@ export default function DialogEditUser(props: {
                 <TextField
                   id="outlined-error-helper-text"
                   label="email address"
-                  defaultValue={props.user.user.emailAddress}
+                  defaultValue={user.emailAddress}
                   onChange={(e) => checkEmailAddress(e.target.value)}
                   type="email"
                   InputProps={{
@@ -192,7 +227,7 @@ export default function DialogEditUser(props: {
                   error={phoneNumberError}
                   id="outlined-error-helper-text"
                   label="mobile number"
-                  defaultValue={props.user.user.phoneNumber}
+                  defaultValue={user.phoneNumber}
                   type="tel"
                   onChange={(e) => checkPhoneNumber(e.target.value)}
                   helperText={phoneNumberHelper}
@@ -214,7 +249,7 @@ export default function DialogEditUser(props: {
                   id="demo-simple-select"
                   label="department"
                   onChange={handleChange}
-                  defaultValue={props.user.user.department}
+                  defaultValue={user.departmentName}
                   renderValue={(value) => <span>{departmentName}</span>}
                 >
                   {departmentsCol?.docs.map((department) => (
@@ -235,10 +270,11 @@ export default function DialogEditUser(props: {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={createUser}>Edit User</Button>
+            <Button onClick={editUser}>Edit User</Button>
           </DialogActions>
         </Dialog>
-      )}
-    </div>
-  );
+      </div>
+    );
+  }
+  return <h1>Acute Dashboard</h1>;
 }

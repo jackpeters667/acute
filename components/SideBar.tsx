@@ -10,6 +10,12 @@ import {
 import React from "react";
 import styles from "../styles/Layout.module.css";
 import SideBarListItem from "./sidebar/SideBarListItem";
+import AnalyticsIcon from '@mui/icons-material/Analytics';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import OtherHousesIcon from '@mui/icons-material/OtherHouses';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 
 export default function SideBar() {
   return (
@@ -21,7 +27,7 @@ export default function SideBar() {
           </h3>
           <ul className="sidebarList p-1">
             <SideBarListItem
-              icon={HomeTwoTone}
+              icon={AnalyticsIcon}
               name="Analytics"
               path="/admin/dashboard"
             />
@@ -33,22 +39,22 @@ export default function SideBar() {
           </h3>
           <ul className="sidebarList p-1">
             <SideBarListItem
-              icon={AccountCircleTwoTone}
-              name="Users"
+              icon={GroupAddIcon}
+              name="Workers"
               path="/admin/users"
             />
             <SideBarListItem
-              icon={AccessTimeTwoTone}
+              icon={AccessTimeIcon}
               name="Timesheet"
               path="/admin/timesheet"
             />
             <SideBarListItem
-              icon={SettingsTwoTone}
+              icon={AssignmentIcon}
               name="Project Management"
               path="/admin/tasks"
             />
             <SideBarListItem
-              icon={SettingsTwoTone}
+              icon={OtherHousesIcon}
               name="Departments"
               path="/admin/departments"
             />
@@ -60,7 +66,7 @@ export default function SideBar() {
           </h3>
           <ul className="sidebarList p-1">
             <SideBarListItem
-              icon={MonetizationOnTwoTone}
+              icon={MonetizationOnIcon}
               name="Expenses"
               path="/admin/expenses"
             />

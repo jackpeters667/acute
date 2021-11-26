@@ -16,6 +16,9 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import router from "next/router";
 import PageHeader from "../../../components/PageHeader";
 import { confirmDialog } from "../../../components/ConfirmDialog";
+import DialogNewTimesheet from "../../../components/timesheet/DialogNewTimesheet";
+
+
 const Timesheet: NextPage = () => {
   const [user, loading, error] = useAuthState(auth);
   function getTime(params: GridValueFormatterParams) {
@@ -32,6 +35,9 @@ const Timesheet: NextPage = () => {
       hours + ":" + minutes.substr(-2) + ":" + seconds.substr(-2);
     return `${formattedTime}`;
   }
+
+  const [editTimesheet, setEditTimesheet] = useState(false);
+  const [timesheetToEdit, setTimesheetToEdit] = useState<any>(null);
   const [value, loadings, errors] = useCollection(collection(db, "timesheet"), {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
@@ -88,22 +94,22 @@ const Timesheet: NextPage = () => {
               {/* change id number to be from array */}
               {/*Or below works */}
               {/* <Link href={`/admin/users/${encodeURIComponent("id")}`}> </Link> */}
-              <Link
-                href={{
-                  pathname: "timesheet/[id]",
-                  query: {
-                    id: params.row.id,
-                    firstName: params.row.firstName,
-                    lastName: params.row.lastName,
-                    date: params.row.date,
-                    started: params.row.started.seconds,
-                    ended: params.row.ended,
-                    time: params.row.time,
-                  },
-                }}
+              <div
+                // href={{
+                //   pathname: "timesheet/[id]",
+                //   query: {
+                //     id: params.row.id,
+                //     firstName: params.row.firstName,
+                //     lastName: params.row.lastName,
+                //     date: params.row.date,
+                //     started: params.row.started.seconds,
+                //     ended: params.row.ended,
+                //     time: params.row.time,
+                //   },
+                // }}
               >
-                <ModeEdit />
-              </Link>
+                  <ModeEdit onClick={() => showOpenDialog(params.row.id)} />
+              </div>
 
               <DeleteOutline onClick={() => handleDelete(params.row.id)} />
             </div>
@@ -120,12 +126,36 @@ const Timesheet: NextPage = () => {
       });
     };
 
+    const showOpenDialog = (row: {
+      id: any;
+       firstname: string;
+       lastname: string;
+       date: any;
+       started: any;
+       ended: any ;
+       time: any;
+    
+    }): void => {
+      let timesheet: Timesheet = {
+        id: row.id,
+        firstname: row.firstname,
+        lastname: row.lastname,
+        date: row.date,
+        started: row.started,
+        ended: row.ended,
+        time: row.time
+      }; 
+    
+      setTimesheetToEdit(timesheet);
+      setEditTimesheet(true);
+    };
+
     return (
       <div style={{ height: 300, width: "100%" }}>
         <PageHeader text="Timesheet" path="timesheet/new" />
-        <Link href="timesheet/new">
-          <a>Hello</a>
-        </Link>
+        <div className="mx-10 mb-6">
+          <DialogNewTimesheet />
+        </div>
         {value && (
           <DataGrid
             rows={value.docs.map((row) => {

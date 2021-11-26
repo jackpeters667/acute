@@ -12,6 +12,7 @@ import { confirmDialog } from "../../../components/ConfirmDialog";
 import DialogNewUser from "../../../components/users/DialogNewUser";
 import DialogEditUser from "../../../components/users/DialogEditUser";
 import { useState } from "react";
+
 export default function users() {
   const [editUser, setEditUser] = useState(false);
   const [user, loading, error] = useAuthState(auth);
@@ -116,14 +117,14 @@ export default function users() {
 
     return (
       <div style={{ height: "80%", width: "100%" }}>
-        <PageHeader path="users/new" text="User" />
+        <PageHeader path="users/new" text="Worker" />
         <div className="mx-10 mb-6">
           <DialogNewUser />
-          <DialogEditUser
+          {/* <DialogEditUser
             user={userToEdit}
             dialogState={setEditUser}
             dialogOpen={editUser}
-          />
+          /> */}
         </div>
         {value && (
           <DataGrid

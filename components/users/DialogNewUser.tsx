@@ -114,10 +114,10 @@ export default function DialogNewUser() {
   return (
     <div>
       <Button variant="outlined" onClick={handleClickOpen} startIcon={<Add />}>
-        New
+        New Worker
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Create User</DialogTitle>
+        <DialogTitle>Create Worker</DialogTitle>
         <DialogContent>
           <Box
             component="form"
@@ -222,7 +222,7 @@ export default function DialogNewUser() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={createUser}>Add User</Button>
+          <Button onClick={createUser}>Add Worker</Button>
         </DialogActions>
       </Dialog>
     </div>

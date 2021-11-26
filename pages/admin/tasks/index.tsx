@@ -10,8 +10,11 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import router from "next/router";
 import PageHeader from "../../../components/PageHeader";
 import { confirmDialog } from "../../../components/ConfirmDialog";
+import DialogNewTask from "../../../components/tasks/DialogNewTask";
 
 const Tasks: NextPage = () => {
+  const [editTask, setEditTask] = useState(false);
+  const [expenseToTask, setTaskToEdit] = useState<any>(null);
   const [user, loading, error] = useAuthState(auth);
   const [value, loadings, errors] = useCollection(collection(db, "tasks"), {
     snapshotListenOptions: { includeMetadataChanges: true },
@@ -63,22 +66,22 @@ const Tasks: NextPage = () => {
               {/* change id number to be from array */}
               {/*Or below works */}
               {/* <Link href={`/admin/users/${encodeURIComponent("id")}`}> </Link> */}
-              <Link
-                href={{
-                  pathname: "tasks/[id]",
-                  query: {
-                    id: params.row.id,
-                    task: params.row.task,
-                    department: params.row.department,
-                    startDate: params.row.startDate,
-                    endDate: params.row.endDate,
-                    owner: params.row.owner,
-                    isActive: params.row.isActive,
-                  },
-                }}
+              <div
+                // href={{
+                //   pathname: "tasks/[id]",
+                //   query: {
+                //     id: params.row.id,
+                //     task: params.row.task,
+                //     department: params.row.department,
+                //     startDate: params.row.startDate,
+                //     endDate: params.row.endDate,
+                //     owner: params.row.owner,
+                //     isActive: params.row.isActive,
+                //   },
+                // }}
               >
-                <ModeEdit />
-              </Link>
+                <ModeEdit onClick={() => showOpenDialog(params.row.id)} />
+              </div>
 
               <DeleteOutline onClick={() => handleDelete(params.row.id)} />
             </div>
@@ -95,9 +98,36 @@ const Tasks: NextPage = () => {
       });
     };
 
+    const showOpenDialog = (row: {
+      id: any;
+       task: string;
+       owner: string;
+       department: any | undefined;
+       statDate: any;
+       endDate: any;
+       isActive: any;
+    
+    }): void => {
+      let task: Task = {
+        id: row.id,
+        task: row.task,
+        owner: row.owner,
+        department: row.department,
+        startDate: row.statDate,
+        endDate: row.endDate,
+        isActive: row.isActive,
+      }; 
+    
+      setTaskToEdit(task);
+      setEditTask(true);
+    };
+
     return (
       <div style={{ height: 300, width: "100%" }}>
         <PageHeader text="Tasks" path="tasks/new" />
+        <div className="mx-10 mb-6">
+          <DialogNewTask />
+        </div>
         {value && (
           <DataGrid
             rows={value.docs.map((row) => {

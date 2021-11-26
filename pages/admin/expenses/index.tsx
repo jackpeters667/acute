@@ -9,9 +9,14 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import router from "next/router";
 import PageHeader from "../../../components/PageHeader";
 import { confirmDialog } from "../../../components/ConfirmDialog";
+import DialogNewExpense from "../../../components/expenses/DialogNewExpense";
+import { useState } from "react";
 
-export default function users() {
+
+export default function expenses() {
+  const [editExpense, setEditExpense] = useState(false);
   const [user, loading, error] = useAuthState(auth);
+  const [expenseToEdit, setExpenseToEdit] = useState<any>(null);
   const [value, loadings, errors] = useCollection(collection(db, "expenses"), {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
@@ -58,20 +63,20 @@ export default function users() {
               {/* change id number to be from array */}
               {/*Or below works */}
               {/* <Link href={`/admin/users/${encodeURIComponent("id")}`}> </Link> */}
-              <Link
-                href={{
-                  pathname: "expenses/[id]",
-                  query: {
-                    id: params.row.id,
-                    name: params.row.name,
-                    amount: params.row.amount,
-                    date: params.row.date,
-                    approved: params.row.approved,
-                  },
-                }}
-              >
-                <ModeEdit />
-              </Link>
+               <div
+                //   href={{
+                //    pathname: "expenses/[id]",
+                //    query: {
+                //      id: params.row.id,
+                //      name: params.row.name,
+                //      amount: params.row.amount,
+                //     date: params.row.date,
+               //       approved: params.row.approved,
+               //     },
+                //    }}
+                > 
+                <ModeEdit onClick={() => showOpenDialog(params.row.id)} />
+              </div>
 
               <DeleteOutline onClick={() => handleDelete(params.row.id)} />
             </div>
@@ -88,9 +93,33 @@ export default function users() {
       });
     };
 
+    const showOpenDialog = (row: {
+      id: any;
+       Name: string;
+       Amount: string;
+       Date: any | undefined;
+       Approved?: string;
+    
+    }): void => {
+      let expense: Expense = {
+        id: row.id,
+        Name: row.Name,
+        Amount: row.Amount,
+        Date: row.Date,
+        Approved: row.Approved
+      }; 
+    
+      setExpenseToEdit(expense);
+      setEditExpense(true);
+    };
+
     return (
       <div style={{ height: 800, width: "100%" }}>
         <PageHeader path="expenses/new" text="Expenses" />
+        <div className="mx-10 mb-6">
+          <DialogNewExpense />
+        </div>
+       
         {value && (
           <DataGrid
             rows={value.docs.map((row) => {

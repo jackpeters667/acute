@@ -163,7 +163,7 @@ export default function DialogEditUser(props: {
     return (
       <div>
         <Dialog open={props.dialogOpen} onClose={() => handleClose}>
-          <DialogTitle>Edit User</DialogTitle>
+          <DialogTitle>Edit Worker</DialogTitle>
           <DialogContent>
             <Box
               component="form"
@@ -270,11 +270,11 @@ export default function DialogEditUser(props: {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={editUser}>Edit User</Button>
+            <Button onClick={editUser}>Edit Worker</Button>
           </DialogActions>
         </Dialog>
       </div>
     );
   }
-  return <h1>Acute Dashboard</h1>;
+  
 }

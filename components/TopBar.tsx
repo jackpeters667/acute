@@ -19,7 +19,7 @@ export default function TopBar() {
     <div className="topbar w-full bg-white h-12 sticky top-0 z-50">
       <div className="tobarWrapper h-full px-5 py-0 flex items-center justify-between">
         <div className="topLeft">
-          <span className="logo font-bold text-3xl text-blue-800">Acute</span>
+          <span className="logo font-bold text-3xl text-blue-800">Acute Catering & Projects</span>
         </div>
         <div className="topRight flex items-center">
           {/* <div className="topBarIconsContainer relative cursor-pointer  mr-3 text-gray-600">
